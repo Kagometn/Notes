@@ -104,7 +104,7 @@
   看ActivityThread.handleResumeActivity源码,标出了重点代码行:
 
 
-  
+
 
   ```java
        final void handleResumeActivity(IBinder token, boolean clearHide, boolean isForward, boolean reallyResume) {
@@ -194,7 +194,7 @@
   在onResume以及onResume之前，开启一个子线程来更新UI，都有可能是会成功的，并且成功率相当大.
 
   当ViewRootImpl创建完成，之后更新UI，比如TextView.setText(),会调用invalidate或者requestLayout，都会调用checkThread来检查线程的。
-  
+
 
 #### 3，给我说说Handler的原理
 
@@ -827,10 +827,10 @@ public class HandlerThread extends Thread {     
 
 不可以，因为在主线程中，Activity内部包含一个Looper对象，它会自动管理Looper，处理子线程中发送过来的消息。而对于子线程而言，没有任何对象帮助我们维护Looper对象，所以需要我们自己手动维护。所以要在子线程开启Handler要先创建Looper，并开启Looper循环
 
-![img](https://pic1.zhimg.com/80/v2-4c10fcb4f08235de8221a3bc47ce5808_hd.jpg)
+![img](Handler.assets/v8221a3bc47ce5808_hd.png)
 
 
- 
+
 
 #### 13.Message对象创建的方式有哪些 & 区别？
 

@@ -10,7 +10,7 @@ Android中的Activity是作为应用程序的载体存在的，它代表一个�
 
 
 
- ![img](https://upload-images.jianshu.io/upload_images/3520331-28ba40f6485e09ce.png?imageMogr2/auto-orient/strip|imageView2/2/w/528/format/webp) 
+ ![img](自定义View.assets/3520331-28ba40f6485e09ce.png) 
 
 ​	
 
@@ -64,7 +64,7 @@ final void handleResumeActivity(IBinder token, boolean clearHide, boolean isForw
 
 **WindowManager将DecorView添加到PhoneWindow中，即addView()方法执行时将视图添加的动作交给了ViewRoot**，ViewRoot作为接口，其实现类**ViewRootImpl具体实现了addView()方法**，最后，视图的具体绘制在performTraversals()中展开，如下图2.1所示：
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-20c55a2ee319279e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](自定义View.assets/3520331-20c55a2ee319279e.png)
 
 图2.1 View绘制的代码层级分析
 
@@ -134,7 +134,7 @@ private void performTraversals() {
 
  该方法主要流程就体现了View绘制渲染的三个主要步骤，分别是测量，摆放，绘制三个阶段。流程图如下图2.2所示：
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-dcda6bc7f0d019cd.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](自定义View.assets/3520331-dcda6bc7f0d019cd.png)
 
 ​																		图2.2 View的绘制流程
 
@@ -330,7 +330,7 @@ MeasureSpec的常量中指定了两种内容，一种为尺寸模式，一种为
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-cab9ba2955391b88.gif?imageMogr2/auto-orient/strip|imageView2/2/w/35/format/webp)
+
 
 ​																		我帮你总结一下
 
@@ -342,7 +342,7 @@ MeasureSpec的常量中指定了两种内容，一种为尺寸模式，一种为
 
 ### 1、View树的Measure测量流程逻辑图
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-07bbaea6a3a00e36.png?imageMogr2/auto-orient/strip|imageView2/2/w/387/format/webp)
+![img](自定义View.assets/3520331-07bbaea6a3a00e36.png)
 
 ### 2、View的Measure流程分析
 
@@ -457,7 +457,7 @@ protected void onStart() {
 
 ### 1、View树的layout摆放流程逻辑图
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-d10bb35c44b70452.png?imageMogr2/auto-orient/strip|imageView2/2/w/410/format/webp)
+![img](自定义View.assets/3520331-d10bb35c44b70452.png)
 
 ### 2、View的layout流程分析
 
@@ -497,7 +497,7 @@ protected void onStart() {
 
 ### 1、View树的draw绘制流程逻辑图
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-8cb13cdfbe5b6361.png?imageMogr2/auto-orient/strip|imageView2/2/w/448/format/webp)
+![img](自定义View.assets/3520331-8cb13cdfbe5b6361.png)
 
 #### 2、View的draw流程分析
 

@@ -66,7 +66,7 @@ Activity的UI界面由Activity,ViewGroup,View以及其派生类组成
 
 ##### 1.1.4 事件分发涉及到的函数以及相应的作用
 
-![1574062578938](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\1574062578938.png)
+![1574062578938](Android的事件分发机制.assets/1574062578938.png))
 
 - dispatchTouchEvent：用来进行事件分发，若事件能够传递到当前的View，则此方法一定会被调用
 
@@ -210,11 +210,11 @@ Activity的UI界面由Activity,ViewGroup,View以及其派生类组成
 
 - 当一个点击事件发生的时候，从Activity的事件分发开始(Activity.dispatchTouchEvent)
 
-  ![](https://upload-images.jianshu.io/upload_images/944365-f8fda76bbdad7b96.png)
+  ![](Android的事件分发机制.assets/944365-f8fda76bbdad7b96.png)
 
   - 方法总结
 
-    ![](https://upload-images.jianshu.io/upload_images/944365-e186b0edcb590546.png)
+    ![](Android的事件分发机制.assets/944365-e186b0edcb590546.png)
 
   而至于viewGroup的dispatchTouchEvent()什么时候返回true/false？可以再2.2中参看。
 
@@ -328,17 +328,17 @@ Android5.0之后，viewGroup.dispatchTouchEvent()的源码发生了变化但是�
 
 过程：当点击了某个控件的时候：
 
-![](https://upload-images.jianshu.io/upload_images/944365-6ec2e864af7ffd37.png?imageMogr2/auto-orient/strip|imageView2/2/w/713/format/webp)
+![](Android的事件分发机制.assets/944365-6ec2e864af7ffd37.png)
 
 ##### 2.2.3  核心方法归纳：
 
-![](https://upload-images.jianshu.io/upload_images/944365-ff627fea1a2244ad.png?imageMogr2/auto-orient/strip|imageView2/2/format/webp)
+![](Android的事件分发机制.assets/944365-ff627fea1a2244ad.png)
 
 Demo详解：
 
 布局如下：
 
-![](https://upload-images.jianshu.io/upload_images/944365-b0bf3dd7ad41b335.png?imageMogr2/auto-orient/strip|imageView2/2/w/210/format/webp)
+![](Android的事件分发机制.assets/944365-b0bf3dd7ad41b335.png)
 
 - 测试代码
 
@@ -421,7 +421,7 @@ Demo详解：
 
   
 
-  ![img](https:////upload-images.jianshu.io/upload_images/944365-a9c45aa25d12b589.png?imageMogr2/auto-orient/strip|imageView2/2/w/987/format/webp)
+  ![img](Android的事件分发机制.assets/944365-a9c45aa25d12b589.png)
 
   
 
@@ -600,7 +600,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-76ce9e8299386729.png?imageMogr2/auto-orient/strip|imageView2/2/w/590/format/webp)
+![img](Android的事件分发机制.assets/944365-76ce9e8299386729.png)
 
 示意图
 
@@ -610,7 +610,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-762cf45f36858bbd.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-762cf45f36858bbd.png)
 
 示意图
 
@@ -673,7 +673,7 @@ Demo详解：
 
   
 
-  ![img](https:////upload-images.jianshu.io/upload_images/944365-97959093583369a0.png?imageMogr2/auto-orient/strip|imageView2/2/w/904/format/webp)
+  ![img](Android的事件分发机制.assets/944365-97959093583369a0.png)
 
   示意图
 
@@ -681,7 +681,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-eeebede55f55b040.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-eeebede55f55b040.png)
 
 
 
@@ -689,7 +689,7 @@ Demo详解：
 
 - 一个事件分发的工作流程总结，具体如下：
 
-![](https://upload-images.jianshu.io/upload_images/944365-aea821bbb613c195.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![](Android的事件分发机制.assets/944365-aea821bbb613c195.png)
 
 >
 >
@@ -699,19 +699,19 @@ Demo详解：
 
 - 以角色为核心的图解说明
 
-![](https://upload-images.jianshu.io/upload_images/944365-bccafd3ff8a880ff.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![](Android的事件分发机制.assets/944365-bccafd3ff8a880ff.png)
 
 - 以方法为核心的图解说明
 
   
 
-![](https://upload-images.jianshu.io/upload_images/944365-9f340a39bdad520e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![](Android的事件分发机制.assets/944365-9f340a39bdad520e.png)
 
 #### 4，核心方法总结
 
 - 已知事件分发过程的核心方法为：dispatchTouchEvent()，onInterceptTouchEvent()和onYTouchEvent()
 
-![](https://upload-images.jianshu.io/upload_images/944365-faaf73d0f3eb870f.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![](Android的事件分发机制.assets/944365-faaf73d0f3eb870f.png)
 
 - 下面，我将结合总结的工作流程，再次详细讲解该3个方法
 
@@ -721,13 +721,13 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-4fbf11afa24b033b.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-4fbf11afa24b033b.png)
 
 示意图
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-f8888a622c255648.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-f8888a622c255648.png)
 
 示意图
 
@@ -738,7 +738,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-a4582905b3972904.png?imageMogr2/auto-orient/strip|imageView2/2/w/824/format/webp)
+![img](Android的事件分发机制.assets/944365-a4582905b3972904.png)
 
 示意图
 
@@ -746,7 +746,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-fee3555bdc6f9524.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-fee3555bdc6f9524.png)
 
 示意图
 
@@ -755,7 +755,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-b00acc9f529f5393.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-b00acc9f529f5393.png)
 
 示意图
 
@@ -763,7 +763,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-6822b1af27852dbd.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-6822b1af27852dbd.png)
 
 示意图
 
@@ -818,7 +818,7 @@ Demo详解：
 
 ![img](Android的事件分发机制.assets/944365-6889eda6ebda8c40.PNG)
 
-示意图
+/示意图
 
 **情况2：false（默认）**
 

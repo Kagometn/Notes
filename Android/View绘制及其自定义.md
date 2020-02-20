@@ -281,13 +281,13 @@ true和false的区别是true会执行`action_down`、`action_move`和`action_up`
 
 当 Activity 接收到焦点的时候，它会被请求绘制布局,该请求由 Android framework 处理.绘制是从根节点开始，对布局树进行 measure 和 draw。整个 View 树的绘图流程在ViewRoot.java类的performTraversals()函数展开，该函数所做 的工作可简单概况为是否需要重新计算视图大小(measure)、是否需要重新安置视图的位置(layout)、以及是否需要重绘(draw)，流程图如下：
 
-![img](https:////upload-images.jianshu.io/upload_images/6623952-b4c1ae6191bf2375.png?imageMogr2/auto-orient/strip|imageView2/2/w/875/format/webp)
+![img](View绘制及其自定义.assets/6623952-b4c1ae6191bf2375.png)
 
 **View 绘制流程函数调用链**
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/6623952-c79ab16428e49312.png?imageMogr2/auto-orient/strip|imageView2/2/w/573/format/webp)
+![img](View绘制及其自定义.assets/6623952-c79ab16428e49312.png)
 
 
 
@@ -301,7 +301,7 @@ true和false的区别是true会执行`action_down`、`action_move`和`action_up`
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/6623952-a0117524740c13dc.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](View绘制及其自定义.assets/6623952-a0117524740c13dc.png)
 
 树的遍历是有序的，由父视图到子视图，每一个 ViewGroup 负责测绘它所有的子视图，而最底层的 View 会负责测绘自身。
 
@@ -365,13 +365,13 @@ setMeasuredDimension()
 
 下面我们取 ViewGroup 的measureChildren（int widthMeasureSpec, int heightMeasureSpec)方法对复合 View 的 Measure 流程做一个分析： MeasureChild 的方法调用流程图：
 
-![img](https:////upload-images.jianshu.io/upload_images/6623952-d363333208326f1a.png?imageMogr2/auto-orient/strip|imageView2/2/w/748/format/webp)
+![img](View绘制及其自定义.assets/6623952-d363333208326f1a.png)
 
  https://www.jianshu.com/p/c6c99abd82e0 
 
 #### 2.说说Activity View树结构
 
- ![img](https://upload-images.jianshu.io/upload_images/3524195-c299f7acef6f50a8.png?imageMogr2/auto-orient/strip|imageView2/2/w/640/format/webp) 
+ ![img](View绘制及其自定义.assets/3524195-c299f7acef6f50a8.png) 
 
 可以看出：
 
@@ -390,7 +390,7 @@ android坐标系分为两类： 绝对坐标系（相对于设备的屏幕）和
 
     绝对坐标系 如图所示：
 
-   ![img](https:////upload-images.jianshu.io/upload_images/3524195-27194d03fcfa8df2.png?imageMogr2/auto-orient/strip|imageView2/2/w/640/format/webp)
+   ![img](View绘制及其自定义.assets/3524195-27194d03fcfa8df2.png)
 
    绝对坐标系.png
 
@@ -437,7 +437,7 @@ getWindow().findViewById(Window.ID_ANDROID_CONTENT).getDrawingRect(rect);
 
     视图坐标系 如图所示：
 
-   ![img](https:////upload-images.jianshu.io/upload_images/3524195-e6af55b9c1f11ff8.png?imageMogr2/auto-orient/strip|imageView2/2/w/640/format/webp)
+   ![img](View绘制及其自定义.assets/3524195-e6af55b9c1f11ff8.png)
 
    视图坐标系.png
 
@@ -855,7 +855,6 @@ drawChild()去重新回调每个子视图的draw()方法
 
 - onDraw()方法，View的绘制流程一共包括三步：①测量measure；②布局layout；③绘制draw；onDraw()方法就是在第三布绘制时发生，开发者已经测量好View的大小，设置好View的布局，剩下最后一步就是，具体画出这个布局。画的方法就是onDraw()，每个View都需要利用这个方法画出自己，ViewGroup除非设置了背景，否则不用调用该方法。有兴趣的读者可具体参考笔者的[《View绘制流程—自定义View相关》](https://blog.csdn.net/weixin_41101173/article/details/79704295)
   
-
 - drawChild()方法的相关介绍，笔者还暂未在官方文档中找到，读者可以尝试查找。
 
   参考网址：https://developer.android.google.cn/index.html

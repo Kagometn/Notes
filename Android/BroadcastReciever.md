@@ -748,7 +748,7 @@ private final String TAG = "MainActivity";
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/2552605-dbe03d95cc3fb423?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](BroadcastReciever.assets/2552605-dbe03d95cc3fb423.png)
 
 这里写图片描述
 
@@ -826,13 +826,13 @@ public class AppReceiver extends BroadcastReceiver {
 
 - 示意图&原理如下：
 
-![示意图](https://imgconvert.csdnimg.cn/aHR0cDovL3VwbG9hZC1pbWFnZXMuamlhbnNodS5pby91cGxvYWRfaW1hZ2VzLzk0NDM2NS05ZmNhOWZkMzk3OGNlZjEwLnBuZz9pbWFnZU1vZ3IyL2F1dG8tb3JpZW50L3N0cmlwJTdDaW1hZ2VWaWV3Mi8yL3cvMTI0MA)
+![示意图](BroadcastReciever.assets/aHR0c.png)
 
 #### 6.3	使用流程
 
 如下：
 
-![示意图](https://imgconvert.csdnimg.cn/aHR0cDovL3VwbG9hZC1pbWFnZXMuamlhbnNodS5pby91cGxvYWRfaW1hZ2VzLzk0NDM2NS03YzlmZjY1NmViZDFiOTgxLnBuZz9pbWFnZU1vZ3IyL2F1dG8tb3JpZW50L3N0cmlwJTdDaW1hZ2VWaWV3Mi8yL3cvMTI0MA)
+![示意图](BroadcastReciever.assets/V3Mi8yL3cvMTI0MA.png)
 
 
 
@@ -996,7 +996,7 @@ public class mBroadcastReceiver extends BroadcastReceiver {
 
     
 
-![Activity生命周期](https://imgconvert.csdnimg.cn/aHR0cDovL3VwbG9hZC1pbWFnZXMuamlhbnNodS5pby91cGxvYWRfaW1hZ2VzLzk0NDM2NS0zNTgyMDBmMTAwZWRmNzUzLnBuZz9pbWFnZU1vZ3IyL2F1dG8tb3JpZW50L3N0cmlwJTdDaW1hZ2VWaWV3Mi8yL3cvMTI0MA)
+![Activity生命周期](BroadcastReciever.assets/L2FL3cvMTI0MA.png)
 
 Activity生命周期的方法是成对出现的：
 
@@ -1013,7 +1013,7 @@ Activity生命周期的方法是成对出现的：
 
 ###### 6.3.3	两种注册方式的区别
 
-![image-20200215174231329](C:\Users\Lenovo\Desktop\Android\image-20200215174231329.png)
+![image-20200215174231329](BroadcastReciever.assets/image-20200215174231329.png)
 
 
 
