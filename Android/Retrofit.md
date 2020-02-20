@@ -2,17 +2,17 @@
 
 ### 简介：
 
-![image-20200218234340399](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200218234340399.png)
+![image-20200218234340399](Retrofit.assets/image-20200218234340399-1582222145209.png))
 
 是一个封装Http请求的框架，主要 用于Android和java，而Retrofit会将每一个Http的请求变成一个Java的接口，故而使用起来非常方便，又因为是一个网络请求框架的封装，其主要原因是由于其内核是OkHttp实现的，如图：
 
-![image-20200218234726015](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200218234726015.png)
+![image-20200218234726015](Retrofit.assets/image-20200218234726015.png))
 
 Application Layer层通过Retrofit层封装请求参数，头部以及URL等配置信息，之后通过OkHttp层完成后续的请求信息，在服务器端将请求结果返回给OkHttp之后再返回给Retrofit层，在返回给Application Layer层。从而使得Retrofit专注于接口的封装工作，OkHttp专注于网络请求的封装过程，从而提高工作效率。
 
 
 
-![image-20200218235231237](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200218235231237.png)
+![image-20200218235231237](Retrofit.assets/image-20200218235231237.png))
 
 
 
@@ -39,7 +39,9 @@ public interface GitHubService{
 
 
 
-![](Retrofit.assets/image-20200219000318054-1582213449071.png)
+
+
+![](Retrofit.assets/image-20200219000318054.png)
 
 
 
