@@ -39,7 +39,7 @@ public interface GitHubService{
 
 
 
-![image-20200219000318054](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219000318054.png)
+![](Retrofit.assets/image-20200219000318054-1582213449071.png)
 
 
 
@@ -81,7 +81,7 @@ public interface GitHubService{
 
 - **通过Retrofit.Builder()模式创建一个Retrofit对象**
 
-  ![image-20200219002719122](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219002719122.png)
+  ![image-20200219002719122](Retrofit.assets/image-20200219002719122-1582213546314.png))
 
   
 
@@ -117,13 +117,13 @@ public interface GitHubService{
   });
   ```
 
-![image-20200219002947244](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219002947244.png)**
+![image-20200219002947244](Retrofit.assets/image-20200219002947244.png))**
 
 
 
 通过动态代理将一个个接口的注解翻译成为Http请求，在通过线程池来执行一个个的请求
 
-![image-20200219003112640](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219003112640.png)
+![image-20200219003112640](Retrofit.assets/image-20200219003112640.png))
 
 
 
@@ -139,7 +139,7 @@ public interface GitHubService{
 
 
 
-![image-20200219003445986](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219003445986.png)
+![image-20200219003445986](Retrofit.assets/image-20200219003445986.png))
 
 三个角色：
 
@@ -159,11 +159,11 @@ public interface GitHubService{
 
   
 
-![image-20200219004225827](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219004225827.png)
+![image-20200219004225827](Retrofit.assets/image-20200219004225827.png))
 
 
 
-![image-20200219004257936](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219004257936.png)
+![image-20200219004257936](Retrofit.assets/image-20200219004257936.png))
 
 
 
@@ -171,7 +171,7 @@ public interface GitHubService{
 
 总结：
 
-![image-20200219004716525](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219004716525.png)
+![image-20200219004716525](Retrofit.assets/image-20200219004716525.png))
 
 代理对象将客户端的调用委派给了目标对象，而在调用目标对象之前和之后，都可以执行某些特定的操作。
 
@@ -207,23 +207,23 @@ public interface GitHubService{
 
 **代理类和被代理类都要实现的接口执行的操作：**
 
-![image-20200219005748026](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219005748026.png)
+![image-20200219005748026](Retrofit.assets/image-20200219005748026-1582214078946.png))
 
 
 
 **被代理类：**
 
-![image-20200219005901026](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219005901026.png)
+![image-20200219005901026](Retrofit.assets/image-20200219005901026.png))
 
 **代理类：**
 
-![image-20200219005837937](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219005837937.png)
+![image-20200219005837937](Retrofit.assets/image-20200219005837937.png))
 
 InvocationHandler:每一个动态代理都要实现的接口
 
 可以理解成代理对象调用程序的时候所一定要实现的接口，当通过代理对象调用方法的时候，这个方法就会将其指派到调用处的InvocationHandler这个接口的invoke()方法上
 
-![image-20200219010025987](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20200219010025987.png)
+![image-20200219010025987](Retrofit.assets/image-20200219010025987.png))
 
 invoke三个参数：
 
@@ -233,7 +233,7 @@ method：所真实代理对象所具有的方法
 
 Object数组：所代理的某个真实对象的所有参数的
 
-![image-20200219012232763](C:\Users\Lenovo\Desktop\image-20200219012232763.png)
+![image-20200219012232763](Retrofit.assets/image-20200219012232763.png)
 
 在使用动态代理的时候，会使用到反射中的proxy()方法中的newProxyInstance()方法，而该方法会根据传递进去的class字节码的对象生成相对应的实例：代理类；此时每当代理类执行方法的时候就会执行InvocationHanlder.invoke方法，而InvocationHandler又是newInstance()中的变量，从而将两者相关联起来。
 
@@ -253,15 +253,15 @@ invoke()方法的返回值会返回给使用者
 
 客户端类：主要用于测试
 
-![image-20200219013148152](C:\Users\Lenovo\Desktop\image-20200219013148152.png)
+![image-20200219013148152](Retrofit.assets/image-20200219013148152.png)
 
 Proxy源码: 
 
-![image-20200219013223858](C:\Users\Lenovo\Desktop\image-20200219013223858.png)
+![image-20200219013223858](Retrofit.assets/image-20200219013223858.png)
 
  上述；
 
-![image-20200219013320124](C:\Users\Lenovo\Desktop\image-20200219013320124.png)
+![image-20200219013320124](Retrofit.assets/image-20200219013320124.png)
 
 newProxyInstance:创建所需要的代理参数
 
@@ -306,13 +306,13 @@ InvocationHandler：
 
 ##### 创建Retrofit实例
 
-![image-20200219023545935](C:\Users\Lenovo\Desktop\image-20200219023545935.png)
+![image-20200219023545935](Retrofit.assets/image-20200219023545935.png)
 
 使用构建者模式创建Retrofit对象，
 
 
 
-![image-20200219023628748](C:\Users\Lenovo\Desktop\image-20200219023628748.png)
+![image-20200219023628748](Retrofit.assets/image-20200219023628748.png)
 
 - ServiceMethod:网络请求接口中对他的方法进行注解之后要通过解析，解析之后的对象就是ServiceMethod，与注解中的get,post是成对出现，一一对应的
 - ServiceMethodCache:用于缓存的，缓存一些网络请求的相关配置，方法，数据转换器，网络请求适配器等等等等
@@ -325,11 +325,11 @@ InvocationHandler：
 
 ###### Retrofit.Builder():通过构建者模式进行类成员变量的初始化
 
-![image-20200219030714020](C:\Users\Lenovo\Desktop\image-20200219030714020.png)
+![image-20200219030714020](Retrofit.assets/image-20200219030714020.png)
 
  
 
-![image-20200219031148444](C:\Users\Lenovo\Desktop\image-20200219031148444.png)
+![image-20200219031148444](Retrofit.assets/image-20200219031148444.png)
 
 - platform：Retrofit适配的平台：Android，java8，IOS等
 - callFactory：请求网络的OkHttp工厂，默认情况下Retrofit使用的是OkHttp进行网络请求
@@ -341,7 +341,7 @@ InvocationHandler：
 
 
 
-![image-20200219031209461](C:\Users\Lenovo\Desktop\image-20200219031209461.png)
+![image-20200219031209461](Retrofit.assets/image-20200219031209461.png)
 
 ```java
 public Builder(){
@@ -358,13 +358,13 @@ PLATFORM是一个单例；
 
 - class.forName(是一个静态方法)去查找指定的类，并且返回一个安卓对象(使用的是安卓平台)
 
-![image-20200219031414233](C:\Users\Lenovo\Desktop\image-20200219031414233.png)
+![image-20200219031414233](Retrofit.assets/image-20200219031414233.png)
 
 
 
-![image-20200219031448898](C:\Users\Lenovo\Desktop\image-20200219031448898.png)
+![image-20200219031448898](Retrofit.assets/image-20200219031448898.png)
 
-![image-20200219031559061](C:\Users\Lenovo\Desktop\image-20200219031559061.png)
+![image-20200219031559061](Retrofit.assets/image-20200219031559061.png)
 
 - defaultCallbackExecotor()：线程间的切换：从子线程切换到主线程，同时也可以在主线程中执行回调方法
 
@@ -372,7 +372,7 @@ PLATFORM是一个单例；
 
   Builder()：
 
-  ![image-20200219125810376](C:\Users\Lenovo\Desktop\image-20200219125810376.png)
+  ![image-20200219125810376](Retrofit.assets/image-20200219125810376.png)
 
   Platform：
 
@@ -397,21 +397,21 @@ PLATFORM是一个单例；
 
   Buidler.baseUrl():对String类型的URL进行转化
 
-  ![image-20200219130535816](C:\Users\Lenovo\Desktop\image-20200219130535816.png)
+  ![image-20200219130535816](Retrofit.assets/image-20200219130535816.png)
 
   
 
   Builder.addConverterFactory():设置数据解析器
 
-  ![image-20200219130956276](C:\Users\Lenovo\Desktop\image-20200219130956276.png)
+  ![image-20200219130956276](Retrofit.assets/image-20200219130956276.png)
 
   
 
-  ![image-20200219131125008](C:\Users\Lenovo\Desktop\image-20200219131125008.png)
+  ![image-20200219131125008](Retrofit.assets/image-20200219131125008.png)
 
   如何实现将集合添加在ConvertFactory中：
 
-  ![image-20200219131258420](C:\Users\Lenovo\Desktop\image-20200219131258420.png)
+  ![image-20200219131258420](Retrofit.assets/image-20200219131258420.png)
 
   
 
@@ -441,11 +441,11 @@ PLATFORM是一个单例；
 
   Buidler.addCallAdapterFactory():
 
-  ![image-20200219131025254](C:\Users\Lenovo\Desktop\image-20200219131025254.png)
+  ![image-20200219131025254](Retrofit.assets/image-20200219131025254.png)
 
-  ![image-20200219131907082](C:\Users\Lenovo\Desktop\image-20200219131907082.png)
+  ![image-20200219131907082](Retrofit.assets/image-20200219131907082.png)
 
-  ![image-20200219131928892](C:\Users\Lenovo\Desktop\image-20200219131928892.png)
+  ![image-20200219131928892](Retrofit.assets/image-20200219131928892.png)
 
   
 
@@ -456,13 +456,13 @@ PLATFORM是一个单例；
 
   Builder.build():完场整个Retrofit对象的创建
 
-  ![image-20200219134203296](C:\Users\Lenovo\Desktop\image-20200219134203296.png)
+  ![image-20200219134203296](Retrofit.assets/image-20200219134203296.png)
 
-  ![image-20200219134343152](C:\Users\Lenovo\Desktop\image-20200219134343152.png)
+  ![image-20200219134343152](Retrofit.assets/image-20200219134343152.png)
 
   
 
-   ![image-20200219135624679](C:\Users\Lenovo\Desktop\image-20200219135624679.png)
+   ![image-20200219135624679](Retrofit.assets/image-20200219135624679.png)
 
   
   
@@ -486,7 +486,7 @@ PLATFORM是一个单例；
 
 
 
-#### RxjavaCallAdapterFactory内部构造与工作原理![IMG_20200219_142018](C:\Users\Lenovo\Desktop\IMG_20200219_142018.jpg)
+#### RxjavaCallAdapterFactory内部构造与工作原理![IMG_20200219_142018](Retrofit.assets/IMG_20200219_142018.jpg)
 
 
 
@@ -494,29 +494,29 @@ PLATFORM是一个单例；
 
 
 
-![image-20200219140153961](C:\Users\Lenovo\Desktop\image-20200219140153961.png)
+![image-20200219140153961](Retrofit.assets/image-20200219140153961.png)
 
 此处的Call对OkHttp中的Call对象进行封装，所以其底层实际使用的是OkHttp进行网络请求
 
-![image-20200219140319799](C:\Users\Lenovo\Desktop\image-20200219140319799.png)
+![image-20200219140319799](Retrofit.assets/image-20200219140319799.png)
 
-![image-20200219140355265](C:\Users\Lenovo\Desktop\image-20200219140355265.png)
+![image-20200219140355265](Retrofit.assets/image-20200219140355265.png)
 
 
 
 - Type responseType()：返回Http解析之后的类型，次数的Type类型并非是接口返回的类型，而是接口返回类型中泛型参数类型的实参，即下面的List集合对象
 
-  ![image-20200219140611518](C:\Users\Lenovo\Desktop\image-20200219140611518.png)
+  ![image-20200219140611518](Retrofit.assets/image-20200219140611518.png)
 
 - <R> T adapter(Call<R> var1)：此处的T指的是需要转换成接口的返回类型，所以会传递一个OkHttp Call对象的实例
 
 - Factory{}：在常见retrfit的时候需要继承Factory这个抽象类，并将这个继承的对象在构造的时候添加到其中
 
-![image-20200219141105891](C:\Users\Lenovo\Desktop\image-20200219141105891.png)
+![image-20200219141105891](Retrofit.assets/image-20200219141105891.png)
 
 - get()：根据接口的返回类型来获取需要的callAdapter
 
-  ![image-20200219142326278](C:\Users\Lenovo\Desktop\image-20200219142326278.png)
+  ![image-20200219142326278](Retrofit.assets/image-20200219142326278.png)
 
   根据从rawType()中获取的原始数据类型，从而判断是否是RxJava执行的类型。并且最终会返回一个callAdapter具体实现对象且调用Adapter()方法进行最终Call请求的转换
 
@@ -530,17 +530,17 @@ PLATFORM是一个单例；
 
 #### 网络请求接口实例解析：
 
-![image-20200219143848552](C:\Users\Lenovo\Desktop\image-20200219143848552.png)
+![image-20200219143848552](Retrofit.assets/image-20200219143848552.png)
 
-![image-20200219143942380](C:\Users\Lenovo\Desktop\image-20200219143942380.png)
+![image-20200219143942380](Retrofit.assets/image-20200219143942380.png)
 
-![image-20200219144143646](C:\Users\Lenovo\Desktop\image-20200219144143646.png)
+![image-20200219144143646](Retrofit.assets/image-20200219144143646.png)
 
 - validateServiceInterface()：对字节码进行异常判断
 - validdataEagerly()：是否需要提前解析该接口
   - eagerlyValidMethods()：
 
-![image-20200219144156119](C:\Users\Lenovo\Desktop\image-20200219144156119.png)
+![image-20200219144156119](Retrofit.assets/image-20200219144156119.png)
 
 - Platform.get()：获取当前平台
 
@@ -569,9 +569,9 @@ PLATFORM是一个单例；
   }
   ```
 
-![image-20200219144348415](C:\Users\Lenovo\Desktop\image-20200219144348415.png)
+![image-20200219144348415](Retrofit.assets/image-20200219144348415.png)
 
-![image-20200219152435911](C:\Users\Lenovo\Desktop\image-20200219152435911.png)
+![image-20200219152435911](Retrofit.assets/image-20200219152435911.png)
 
 - methodAnnotations:网络请求方法接口中的注解
 - parameterTypes:获取网络接口方法中参数的类型
@@ -579,13 +579,13 @@ PLATFORM是一个单例；
 
 在create()方法中使用的是动态代理来解析接口中的方法，参数，注解等，然后执行invocationHandler中的invoke执行具体操作
 
-![image-20200219150433267](C:\Users\Lenovo\Desktop\image-20200219150433267.png)
+![image-20200219150433267](Retrofit.assets/image-20200219150433267.png)
 
-![image-20200219150410878](C:\Users\Lenovo\Desktop\image-20200219150410878.png)
+![image-20200219150410878](Retrofit.assets/image-20200219150410878.png)
 
 builder():
 
-![image-20200219152757073](C:\Users\Lenovo\Desktop\image-20200219152757073.png)
+![image-20200219152757073](Retrofit.assets/image-20200219152757073.png)
 
 
 
@@ -597,7 +597,7 @@ builder():
 
 ###### invoke()
 
-![image-20200219150516586](C:\Users\Lenovo\Desktop\image-20200219150516586.png)
+![image-20200219150516586](Retrofit.assets/image-20200219150516586.png)
 
 ```java
 //loadServiceMethod:加载ServiceMethod
@@ -607,7 +607,7 @@ OkHttppCall okHttpCall = new OkHttpCall(serviceMethod,args);
 return serviceMethod.callAdapter(okhttpCall);
 ```
 
-![image-20200219152151393](C:\Users\Lenovo\Desktop\image-20200219152151393.png)
+![image-20200219152151393](Retrofit.assets/image-20200219152151393.png)
 
 - converter:数据转化
 - relativeUrl:相对地址
@@ -624,41 +624,41 @@ return serviceMethod.callAdapter(okhttpCall);
 call.execute();
  ```
 
-![image-20200219153749865](C:\Users\Lenovo\Desktop\image-20200219153749865.png)
+![image-20200219153749865](Retrofit.assets/image-20200219153749865.png)
 
-![image-20200219153815618](C:\Users\Lenovo\Desktop\image-20200219153815618.png)
+![image-20200219153815618](Retrofit.assets/image-20200219153815618.png)
 
 
 
-![image-20200219160047369](C:\Users\Lenovo\Desktop\image-20200219160047369.png)
+![image-20200219160047369](Retrofit.assets/image-20200219160047369.png)
 
-- ![image-20200219154010266](C:\Users\Lenovo\Desktop\image-20200219154010266.png)
-- ![image-20200219154025417](C:\Users\Lenovo\Desktop\image-20200219154025417.png)
-- ![image-20200219154100266](C:\Users\Lenovo\Desktop\image-20200219154100266.png)
-- ![image-20200219154243660](C:\Users\Lenovo\Desktop\image-20200219154243660.png)
-- ![image-20200219154256861](C:\Users\Lenovo\Desktop\image-20200219154256861.png)
+- ![image-20200219154010266](Retrofit.assets/image-20200219154010266.png)
+- ![image-20200219154025417](Retrofit.assets/image-20200219154025417.png)
+- ![image-20200219154100266](Retrofit.assets/image-20200219154100266.png)
+- ![image-20200219154243660](Retrofit.assets/image-20200219154243660.png)
+- ![image-20200219154256861](Retrofit.assets/image-20200219154256861.png)
 
 
 
 异步：OkHttpCall.enqueue():会用到回调
 
-![image-20200219160223472](C:\Users\Lenovo\Desktop\image-20200219160223472.png)
+![image-20200219160223472](Retrofit.assets/image-20200219160223472.png)
 
-![image-20200219160433816](C:\Users\Lenovo\Desktop\image-20200219160433816.png)
+![image-20200219160433816](Retrofit.assets/image-20200219160433816.png)
 
-![image-20200219160451200](C:\Users\Lenovo\Desktop\image-20200219160451200.png)
-
-
+![image-20200219160451200](Retrofit.assets/image-20200219160451200.png)
 
 
 
 
 
-![image-20200219160150837](C:\Users\Lenovo\Desktop\image-20200219160150837.png)
+
+
+![image-20200219160150837](Retrofit.assets/image-20200219160150837.png)
 
 
 
-![qq_pic_merged_1582099916776](C:\Users\Lenovo\Desktop\qq_pic_merged_1582099916776.jpg)
+![qq_pic_merged_1582099916776](Retrofit.assets/qq_pic_merged_1582099916776.jpg)
 
 
 
@@ -701,13 +701,13 @@ platform->findPaltform()
 
 AS：run方法生成apk
 
-![image-20200219162758521](C:\Users\Lenovo\Desktop\image-20200219162758521.png)
+![image-20200219162758521](Retrofit.assets/image-20200219162758521.png)
 
 
 
 #### 策略模式：
 
-![image-20200219163419227](C:\Users\Lenovo\Desktop\image-20200219163419227.png)
+![image-20200219163419227](Retrofit.assets/image-20200219163419227.png)
 
 
 

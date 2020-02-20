@@ -26,9 +26,7 @@
 
 #### 2.说说Service的生命周期以及其三种方式。
 
-![img](https:////upload-images.jianshu.io/upload_images/3094003-c2c08d158e42668f.png?imageMogr2/auto-orient/strip|imageView2/2/w/423/format/webp)
-
-image.png
+![img](Service.assets/3094003-c2c08d158e42668f.png)
 
 
 
@@ -1706,7 +1704,7 @@ Android中的framework层主要是由WMS，AMS还有View所构成的， **这三
 
 在视图层次中，Activity在WIndow之上，如下图，直接截取自我的另一篇博客：
 
-![img](https:////upload-images.jianshu.io/upload_images/2412005-b52e5a25eaf57fbc.png?imageMogr2/auto-orient/strip|imageView2/2/w/504/format/webp)
+![img](Service.assets/2412005-b52e5a25eaf57fbc.png)
 
 Android应用程序窗口模型
 
@@ -1753,7 +1751,7 @@ Android支持的窗口类型很多，统一可以分为三大类，另外各个�
 
 ###### UML
 
-![img](https:////upload-images.jianshu.io/upload_images/2412005-963e4a2a5070a624.png?imageMogr2/auto-orient/strip|imageView2/2/w/1118/format/webp)
+![img](Service.assets/2412005-963e4a2a5070a624.PNG)
 
 ##### 代码逻辑
 
@@ -1811,7 +1809,7 @@ A：在WMS启动之前，系统只需显示开机动画，它们都有特殊的�
 
 ###### UML（类间关系）
 
-![img](https:////upload-images.jianshu.io/upload_images/2412005-0efd7de9446583c1.png?imageMogr2/auto-orient/strip|imageView2/2/w/756/format/webp)
+![img](Service.assets/2412005-0efd7de9446583c1.PNG)
 
 从类图可以看出，`ActivityManagerProxy`和`ActivityManagerNative`都实现了`IActivityManager`，`ActivityManagerProxy`就是代理部分，`ActivityManagerNative`就是实现部分，但`ActivityManagerNative`是个抽象类，并不处理过多的具体逻辑，大部分具体逻辑是由`ActivityManagerService`承担，这就是为什么我们说真实部分应该为`ActivityManagerService`。
 

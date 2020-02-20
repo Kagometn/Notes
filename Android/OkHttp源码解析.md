@@ -36,7 +36,7 @@ Response response = client.newCall(request).execute();//获取Response对象
 - 将Rquest封装成Call对象
 - 调用Call的execute()发送同步请求
 
-![1574511732747](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\1574511732747.png)
+![1574511732747](OkHttp源码解析.assets/1574511732747.png))
 
 
 
@@ -250,7 +250,7 @@ private <T> void finished(Deque<T> calls, T call, boolean promoteCalls) {
 
 维持call请求发送的一个状态，同时也维护了一个线程池用于执行网络请求，而Call请求在执行任务的时候通过dispatcher这个分发器类将Call的任务请求推到执行队列当中进行操作，如果操作完成之后，再执行等待队列中的任务
 
-![1574517869220](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\1574517869220.png)
+![1574517869220](OkHttp源码解析.assets/1574517869220.png))
 
 
 
@@ -430,7 +430,7 @@ private <T> void finished(Deque<T> calls, T call, boolean promoteCalls) {
 
 
 
-![image-20191124133817101](C:\Users\Lenovo\Desktop\Android\image-20191124133817101.png)
+![image-20191124133817101](OkHttp源码解析.assets/image-20191124133817101.png))
 
 ##### 拦截器：
 

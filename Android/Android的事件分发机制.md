@@ -2,7 +2,7 @@
 
 
 
-![](https://upload-images.jianshu.io/upload_images/944365-e7baca065f885271.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![](Android的事件分发机制.assets/944365-e7baca065f885271.png)
 
 #### 1.1 什么是事件：
 
@@ -14,13 +14,13 @@ Touch事件的相关细节(发生触摸的位置，时间等)被封装成MotionE
 
 ##### 1.1.1 MotionEvent事件类型：
 
-![1574055655671](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\1574055655671.png)
+![1574055655671](Android的事件分发机制.assets/1574055655671.png))
 
 **事件序列：**	其实就是从手指触摸屏幕开始到离开屏幕所发生的一系列事件
 
 > 注：一般情况下，事件列都是以`DOWN`事件开始、`UP`事件结束，中间有无数的MOVE事件，如下图：
 
-![](https://upload-images.jianshu.io/upload_images/944365-79b1e86793514e99.png)
+![](Android的事件分发机制.assets/944365-79b1e86793514e99.png)
 
 ##### 1.1.2  什么是事件分发：
 
@@ -32,11 +32,11 @@ Activity的UI界面由Activity,ViewGroup,View以及其派生类组成
 
 ​	
 
-![](https://user-gold-cdn.xitu.io/2019/7/29/16c3b74f8063d008?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+![](Android的事件分发机制.assets/16c3b74f8063d008.png)
 
 
 
-![](https://upload-images.jianshu.io/upload_images/944365-02c588300f6ad741.png?imageMogr2/auto-orient/strip|imageView2/2/w/590/format/webp)
+![](Android的事件分发机制.assets/944365-02c588300f6ad741.png)
 
 
 
@@ -46,11 +46,11 @@ Activity的UI界面由Activity,ViewGroup,View以及其派生类组成
 
 ###### 事件分发过程是由哪些方法写作完成：
 
-![](https://upload-images.jianshu.io/upload_images/944365-7c6642f518ffa3d2.png?imageMogr2/auto-orient/strip|imageView2/2/w/675/format/webp)
+![](Android的事件分发机制.assets/944365-7c6642f518ffa3d2.png)
 
 总结：
 
-​	![](https://upload-images.jianshu.io/upload_images/944365-d0a7e6f3c2bbefcc.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+​	![](Android的事件分发机制.assets/944365-d0a7e6f3c2bbefcc.png)
 
 
 
@@ -772,7 +772,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-962fc440d2fffe0b.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-962fc440d2fffe0b.PNG)
 
 示意图
 
@@ -780,7 +780,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-0a9ae1bc05f432b9.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-0a9ae1bc05f432b9.png)
 
 示意图
 
@@ -792,7 +792,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-f4116863606e494e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-f4116863606e494e.png)
 
 示意图
 
@@ -800,7 +800,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-28d0f5e7a1665148.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-28d0f5e7a1665148.png)
 
 示意图
 
@@ -810,13 +810,13 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-9a83aed00a8c0a54.png?imageMogr2/auto-orient/strip|imageView2/2/w/926/format/webp)
+![img](Android的事件分发机制.assets/944365-9a83aed00a8c0a54.PNG)
 
 示意图
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-6889eda6ebda8c40.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-6889eda6ebda8c40.PNG)
 
 示意图
 
@@ -824,13 +824,13 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-ea06029e3176635f.png?imageMogr2/auto-orient/strip|imageView2/2/w/926/format/webp)
+![img](Android的事件分发机制.assets/944365-ea06029e3176635f.PNG)
 
 示意图
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-299cfcbe3a9c9fd5.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-299cfcbe3a9c9fd5.PNG)
 
 示意图
 
@@ -842,13 +842,13 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-b5f527027257b98e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-b5f527027257b98e.PNG)
 
 示意图
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-744f5b7e8d413562.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-744f5b7e8d413562.PNG)
 
 示意图
 
@@ -858,13 +858,13 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-36af591c11a8e450.png?imageMogr2/auto-orient/strip|imageView2/2/w/824/format/webp)
+![img](Android的事件分发机制.assets/944365-36af591c11a8e450.PNG)
 
 示意图
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-aef94c6c182353a9.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-aef94c6c182353a9.PNG)
 
 示意图
 
@@ -873,7 +873,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-efd21a46a9af808e.png?imageMogr2/auto-orient/strip|imageView2/2/w/824/format/webp)
+![img](Android的事件分发机制.assets/944365-efd21a46a9af808e.PNG)
 
 示意图
 
@@ -881,7 +881,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-5da9fe2990f75d9c.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-5da9fe2990f75d9c.PNG)
 
 示意图
 
@@ -930,7 +930,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-e0f526dd1b5731be.png?imageMogr2/auto-orient/strip|imageView2/2/w/438/format/webp)
+![img](Android的事件分发机制.assets/944365-e0f526dd1b5731be.PNG)
 
 示意图
 
@@ -997,7 +997,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-77e933eb44682777.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](Android的事件分发机制.assets/944365-77e933eb44682777.PNG)
 
 示意图
 
@@ -1019,7 +1019,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-a5e7cfed2cba02c3.png?imageMogr2/auto-orient/strip|imageView2/2/w/1140/format/webp)
+![img](C:/Users/Lenovo/Desktop/944365-a5e7cfed2cba02c3.PNG)
 
 示意图
 
@@ -1047,7 +1047,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-1599f532038686cd.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-1599f532038686cd.PNG)
 
 示意图
 
@@ -1081,7 +1081,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-93d0b1496e9e6ca4.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Android的事件分发机制.assets/944365-93d0b1496e9e6ca4.PNG)
 
 流程讲解
 
@@ -1093,7 +1093,7 @@ Demo详解：
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/944365-9d639a0b9ebf7b4a.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![944365-9d639a0b9ebf7b4a](Android的事件分发机制.assets/944365-9d639a0b9ebf7b4a-1582219835372.PNG)
 
 流程讲解
 

@@ -2,13 +2,13 @@
 
 # Activity篇
 
- ![Activity知识体系图](https://img-blog.csdnimg.cn/20190503094426673.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NsQW5kRWxsZW4=,size_16,color_FFFFFF,t_70) 
+ ![Activity知识体系图](Activity简述.assets/20190503094426673-1582217163130.png) 
 
 ## 一、Activity简述
 
 #### 1、概念引入：什么是Activity
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-39209fce8879c228.png?imageMogr2/auto-orient/strip|imageView2/2/w/493/format/webp)
+![img](Activity简述.assets/3520331-39209fce8879c228.PNG)
 
 
 
@@ -66,7 +66,7 @@ onPause（）是你对于用户离开界面的处理。最重要的是，此时�
 
 #### 1、Activity的生命周期图
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-845232b57702c0e4?imageMogr2/auto-orient/strip|imageView2/2/w/606/format/webp)
+![img](Activity简述.assets/3520331-845232b57702c0e4.PNG)
 
 图2.1  Activity生命周期图
 
@@ -92,7 +92,7 @@ onPause（）是你对于用户离开界面的处理。最重要的是，此时�
 
  退出当前Activity时–>onPause()–>onStop()–>onDestroy()
 
- ![生命周期图](https://img-blog.csdn.net/20180912124237343?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NsQW5kRWxsZW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ ![生命周期图](Activity简述.assets/20180912124237343.png)
 
 1.启动了一个Activity,通常是Intent来完成。启动一个Activity首先要执行的回调函数是onCreate(),通常在代码中你需要在此函数中绑定布局，绑定控件，初始化数据等做一些初始化的工作。
 
@@ -152,7 +152,7 @@ onDestory():
 
 ##### 3.1.1	资源相关的系统配置发生改变导致Activity被杀死并重新创建 
 
-![这里写图片描述](https://img-blog.csdn.net/20180912123143842?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NsQW5kRWxsZW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](Activity简述.assets/20180912123143842.png)
 
  从图中看出当Activity发生意外的情况的时候，这里的意外指的就是系统配置发生改变，Activity会被销毁，其onPause,OnStop,onDestory函数均会被调用，同时由于Actiivty是在异常情况下终止的，系统会调用onSaveInstanceState来保存当前Activity状态。调用onSaveInstanceState的时机总会发生在onStop之前，至于会不会调用时机发生在onPause方法之前，那就说不定了，这个没有固定的顺序可言，正常情况下一般onSaveInstanceState不会被调用。当Activity被重新创建后，系统会调用onRestoreInstanceState,并且把Actiivty销毁时onSaveInstanceState方法所保存的Bundle对象作为参数传递给onRestoreInstanceState和onCreate方法。所以我们可以通过onRestoreInstanceState和onCreate方法来判断Actiivty是否被重建了，如果被重建了，那么我们就可以取出之前保存的数据并恢复，从时序上来看，onRestoreInstanceState的调用时机发生在onStart之后。
 
@@ -161,7 +161,7 @@ onDestory():
 -  **关于保存和恢复View层次结构系统工作流程是这样的：首先Activity被意外终止时，Activity会调用
    onSaveInstanceState去保存数据，然后Activity会委托Window去保存数据，接着Window会委托它上面的顶层容器去保存数据。顶层容器肯是一个ViewGroup，一般来说是DecorView。最后顶层容器再去一一通知它的子元素来保存数据，这样整个数据保存过程就完成了。**这是一种典型的委托思想，上层委托下层、父容器委托子元素去处理一件事件；在View的绘制流程、事件分发都是采用这种思想在处理。
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-d36da4b2a80ba0bf.png?imageMogr2/auto-orient/strip|imageView2/2/w/617/format/webp)
+![img](Activity简述.assets/2020-02-21 005019.jpg)
 
 Activity重新创建图解.png
 
@@ -170,7 +170,7 @@ Activity重新创建图解.png
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-f7422fa66c0acc09.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Activity简述.assets/3520331-f7422fa66c0acc09.PNG)
 
 
 
@@ -189,7 +189,7 @@ Activity按优先级从高到低可分为如下3种：
 - 根据上述的分析，系统配置发生改变后，系统会重新创建Activity,那么是否可以不重新创建Activity呢？
    答案是有的，那就是在清单文件中**为相应的Activity配置configChanges属性，并添加相应值** 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-31cf97227fde1b7e.png?imageMogr2/auto-orient/strip|imageView2/2/w/427/format/webp)
+![img](Activity简述.assets/3520331-31cf97227fde1b7e.PNG)
 
 图3.2.1.1  configChanges属性的配置
 
@@ -202,7 +202,7 @@ Activity按优先级从高到低可分为如下3种：
 
 - android:configChanges配置的属性不仅局限于此，下图为android:configChanges可配置的所有属性内容：
 
-  ![img](https:////upload-images.jianshu.io/upload_images/3520331-efd3647c1f5cbf25.png?imageMogr2/auto-orient/strip|imageView2/2/w/1160/format/webp)
+  ![img](Activity简述.assets/3520331-efd3647c1f5cbf25.PNG)
 
   图3.2.1.2 android:configChanges可配置的属性
 
@@ -217,7 +217,7 @@ Activity按优先级从高到低可分为如下3种：
 
  ②**onSaveInstanceState（）方法会在当前页面销毁前被调用存储数据**，**onRestoreInstanceState（）方法会被执行去取出保存的Bundle对象中的内容**，进行一次横竖屏切换时Activity所执行的生命周期方法以及在onSaveInstanceState与onRestoreInstanceState打印相应日志，如下图所示：
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-2fc02d8fc428d8fe.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Activity简述.assets/3520331-2fc02d8fc428d8fe.PNG)
 
 图2.3.1.1 Activity横竖屏切换的生命周期图.png
 
@@ -286,7 +286,7 @@ Activity按优先级从高到低可分为如下3种：
 当前 Activity 启动另一个 Activity 时，该新 Activity 会被推送到堆栈顶部，成为焦点所在。 前一个 Activity 仍保留在堆栈中，但是处于停止状态。Activity 停止时，系统会保持其用户界面的当前状态。 用户按“返回”按钮时，当前 Activity 会从堆栈顶部弹出（Activity 被销毁），而前一个 Activity 恢复执行（恢复其 UI 的前一状态）。 堆栈中的 Activity 永远不会重新排列，仅推入和弹出堆栈：由当前 Activity 启动时推入堆栈；用户使用“返回”按钮退出时弹出堆栈。 因此，返回栈以“**后进先出**”对象结构运行。 下图 通过时间线显示 Activity 之间的进度以及每个时间点的当前返回栈，直观呈现了这种行为。
 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-f046e00597755de7.png?imageMogr2/auto-orient/strip|imageView2/2/w/617/format/webp)
+![img](Activity简述.assets/2020-02-21 005019.png)
 
 图3.1 Activity任务栈
 
@@ -352,7 +352,7 @@ getApplication().startActivity(new Intent(HomeActivity.this,MainActivity.class))
 
 **会报如下所示的错误**：
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-4e1a10cda8b172f6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![img](Activity简述.assets/3520331-4e1a10cda8b172f6.PNG)
 
 图4.1 采用ApplicationContext去开启Activity时的错误
 
@@ -367,7 +367,7 @@ getApplication().startActivity(new Intent(HomeActivity.this,MainActivity.class))
  该模式下**如果Activity已经位于栈顶，那么该Activity不会重新创建，同时它的OnNewIntent方法会被调用，通过方法的参数可以取出其中的信息**，并且**在这种模式如果这个Actvitiy不位于栈顶，那么这个Activity依然会被重新创建。**
 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-7a6d38b44ca6a6d6.png?imageMogr2/auto-orient/strip|imageView2/2/w/501/format/webp)
+![img](Activity简述.assets/3520331-7a6d38b44ca6a6d6.PNG)
 
 图4.2 OnNewIntent方法
 
@@ -401,7 +401,7 @@ getApplication().startActivity(new Intent(HomeActivity.this,MainActivity.class))
 
  在每个Activity中我们调用getTaskId()，如下图打印其栈Id,我们可以查看到standard模式的HomeActivity与DetailActivity都位于同一个栈中，而singleInstance模式下的MainActivity单独位于一个栈中，。
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-5739bee9ed4daa91.png?imageMogr2/auto-orient/strip|imageView2/2/w/270/format/webp)
+![img](Activity简述.assets/3520331-5739bee9ed4daa91.PNG)
 
 
 
@@ -442,7 +442,7 @@ startActivity(intent);
 
 
 
-![img](https:////upload-images.jianshu.io/upload_images/3520331-a9db8304c708e2df.png?imageMogr2/auto-orient/strip|imageView2/2/w/1086/format/webp)
+![img](Activity简述.assets/3520331-a9db8304c708e2df.PNG)
 
 
 
@@ -476,7 +476,7 @@ startActivity(intent);
 
 #### 3，Activity中Intent	Filter的匹配过程
 
- ![这里写图片描述](https://img-blog.csdn.net/20160410151540108)
+ ![这里写图片描述](Activity简述.assets/20160410151540108.PNG)
 
 #####  这三种类别的匹配规则
 
@@ -646,7 +646,7 @@ i.setType("image/*");
 ```java
 i.setDataAndType(Uri.parse(uri), "image/*");
 ```
- ![img](https://upload-images.jianshu.io/upload_images/2960353-4a997da4adaa0dcb.png?imageMogr2/auto-orient/strip|imageView2/2/w/443/format/webp)
+ ![img](Activity简述.assets/2960353-4a997da4adaa0dcb.PNG)
 
 
 
@@ -658,7 +658,7 @@ intent.setData(data);
 startActivity(intent); 
  ```
 
- ![img](https://upload-images.jianshu.io/upload_images/2960353-cd06ff227aad8bb7.png?imageMogr2/auto-orient/strip|imageView2/2/w/633/format/webp) 
+ ![img](Activity简述.assets/2960353-cd06ff227aad8bb7.PNG) 
 
 隐式启动会找到所匹配到的应用，并提示用户选择打开方式
 
@@ -1234,11 +1234,11 @@ myFragment.toString("传送的string数据");
 
 #### 6，Activity和Fragment生命周期的理解
 
- ![img](https://upload-images.jianshu.io/upload_images/140633-99fdb4956f19f097.png?imageMogr2/auto-orient/strip|imageView2/2/w/513/format/webp) 
+ ![img](Activity简述.assets/3520331-845232b57702c0e4-1582218139212.PNG) 
 
- ![img](https://upload-images.jianshu.io/upload_images/140633-5d0b6d1d8ba51a0d.png?imageMogr2/auto-orient/strip|imageView2/2/w/317/format/webp) 
+ ![img](Activity简述.assets/4625401-a2c6ab45dc165d6b.png) 
 
- ![img](https://upload-images.jianshu.io/upload_images/140633-968dedf205657098.png?imageMogr2/auto-orient/strip|imageView2/2/w/340/format/webp)
+ ![img](Activity简述.assets/4625401-a37a7c32683ecda6.png)
 
 在该图中，您可以看到 Activity 的每个连续状态如何决定片段可以收到的回调方法。 例如，当 Activity 收到其 onCreate() 回调时，Activity 中的片段只会收到 onActivityCreated() 回调。
 
@@ -1755,7 +1755,7 @@ ANR的全称Application  not  Responding，意思就是程序未响应
     - 主线程是running或者native而对应的栈对应了我们应用中的函数，则很有可能就是执行该函数时候发生了超时。
     - 主线程被block:非常明显的线程被锁，这时候可以看是被哪个线程锁了，可以考虑优化代码。如果是死锁问题，就更需要及时解决了。
     - 由于抓trace的时刻很有可能耗时操作已经执行完了（ANR -> 耗时操作执行完毕 ->系统抓trace），这时候的trace就没有什么用了，主线程的stack就是这样的：
-    - ![image](https://user-gold-cdn.xitu.io/2019/5/20/16ad355cb45639f5?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+    - ![image](Activity简述.assets/16ad355cb45639f5.png)
 - 总结，就是两个问题 
   - 1.CPU 问题 
     - 在 Monkeylog.log 文件中定位到 "anr in" 位置，查看 cpu usage ,total 占用，如发现接近100%，暂时判断为 cpu 问题。
