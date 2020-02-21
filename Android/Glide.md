@@ -289,6 +289,10 @@ getApplicationManager():
 - 在创建Request之前需要对该Target之前绑定的Request进行删除
 - 发送Request，将其交给RequestTracker请求跟踪器，进行相应处理
 
+![2020-02-21 155138](Glide.assets/2020-02-21 155138.png)
+
+
+
 
 
 <font color='red'>**2.4.1**</font> 	recycle()：完成初始化的工作
@@ -301,3 +305,70 @@ getApplicationManager():
 
 
 
+![IMG_20200221_162951](Glide.assets/IMG_20200221_162951.jpg)
+
+
+
+ ![image-20200221164514794](Glide.assets/image-20200221164514794.png)
+
+![image-20200221164612352](Glide.assets/image-20200221164612352.png)
+
+![image-20200221164638307](Glide.assets/image-20200221164638307.png)
+
+![image-20200221164706940](Glide.assets/image-20200221164706940.png)
+
+ ![image-20200221164759250](Glide.assets/image-20200221164759250.png)
+
+![image-20200221164829766](Glide.assets/image-20200221164829766.png)
+
+ ![image-20200221164855382](Glide.assets/image-20200221164855382.png)
+
+![image-20200221165001952](Glide.assets/image-20200221165001952.png)
+
+
+
+**DataFetcher:**
+
+![image-20200221163841092](Glide.assets/image-20200221163841092.png)
+
+![image-20200221163905717](Glide.assets/image-20200221163905717.png)
+
+- 从其实现类可以看出其主要的用途就是实现了不同形式的图片数据类型
+
+![IMG_20200221_170300](Glide.assets/IMG_20200221_170300.jpg)
+
+
+
+![image-20200221170510831](Glide.assets/image-20200221170510831.png)
+
+![image-20200221170547947](Glide.assets/image-20200221170547947.png)
+
+
+
+**engine.load()：**
+
+
+
+#### into():
+
+
+
+### 缓存
+
+#### 内存：防止将图片重复读取到内存中
+
+##### LruCache:
+
+###### 原理：
+
+将最近使用的对象的强引用存储到LinkedHashMap中，并且将最近很少使用的对象在缓存池达到预设值之前从内存中移除
+
+
+
+
+
+![image-20200221184412859](Glide.assets/image-20200221184412859.png)
+
+
+
+#### 硬盘缓存 ：防止重复的从硬盘中读取所需的图片
