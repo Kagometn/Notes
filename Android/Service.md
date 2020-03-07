@@ -57,7 +57,7 @@
 
 生命周期顺序：**onCreate->onStartCommand->onDestroy**
 
-如果一个**Service被某个Activity 调用 Context.startService方法启**动，那么不管是否有Activity使用bindService绑定或unbindService解除绑定到该Service，该Service都在后台运行，直到被调用stopService，或自身的stopSelf方法。当然如果系统资源不足，android系统也可能结束服务，还有一种方法可以关闭服务，在设置中，通过应用->找到自己应用->停止。
+如果一个**Service被某个Activity 调用 Context.startService方法启动，那么不管是否有Activity使用bindService绑定或unbindService解除绑定到该Service，该Service都在后台运行，直到被调用stopService，或自身的stopSelf方法**。当然如果系统资源不足，android系统也可能结束服务，还有一种方法可以关闭服务，在设置中，通过应用->找到自己应用->停止。
 
 **注意点：**
 
@@ -496,6 +496,19 @@ I/TestService2: onDestroy 方法被调用！
    **conn:**ServiceConnection对象,用户监听访问者与Service间的连接情况, 连接成功回调该对象中的onServiceConnected(ComponentName,IBinder)方法; 如果Service所在的宿主由于异常终止或者其他原因终止,导致Service与访问者间断开 连接时调用onServiceDisconnected(CompanentName)方法,主动通过unBindService() 方法断开并不会调用上述方法!
    **flags:指定绑定时是否自动创建Service**(如果Service还未创建), 参数可以是0(不自动创建),BIND_AUTO_CREATE(自动创建)
 
+#### 3.0   为什么bindService可以跟Activity生命周期联动？
+
+这个问题字面是在考察Service的联动现象，实在考察对Android源码的理解，接下来咱们就针 对源码捋一遍。 首先我们知道，bindService 方法执行时，会回调到onServiceConnected()。
+那onServiceConnected是怎么回调的？又是由谁回调的？ Service的大部分操作均由ActivityThread的内部类H处理。
+onServiceConnected()调用链如下所示：
+
+![image-20200302155337780](Service.assets/image-20200302155337780.png)
+
+以上执行过程中LoadedApk会记录 ServiceConnection 信息。 当Activity 执行 finish 方法时，会通过 LoadedApk检查Activity是否存在未注销/解绑的 BroadcastReceiver 和 ServiceConnection。 如果有未解绑的对象，则通知 AMS 注销/解绑对应的 BroadcastReceiver 和 Service，并打印异 常信息，告诉用户应该主动执行注销/解绑的操作。
+注:
+
+Service的所有生命周期方法和ServiceConnection的回调方法都是运行在主线程的。所以在开发 中特别要注意，千万不能在Service的生命周期方法中做非常耗时的操作，否则会引起主线程卡 顿，严重时还会引起ANR。
+
 
 
 #### 4.Service和Thread的区别？(校招&实习)
@@ -710,62 +723,68 @@ startService(serviceIntent);
     }
 ```
 
-**也可以用service +broadcast 方式启动：**
+**2,  在onDestory中重启Service：**
 
 onDestroy方法里重启service,当service走ondestory的时候，发送一个自定义的广播，当收到广播的时候，重新启动service；
 
-```java 
-        <receiver android:name="com.dbjtech.acbxt.waiqin.BootReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="com.dbjtech.waiqin.destroy" />//这个就是自定义的action
-            </intent-filter>
-        </receiver>
-```
+- 在onDestroy时：
 
-在onDestroy时：
+  ```java
+   @Override
+      public void onDestroy() {
+          stopForeground(true);
+          Intent intent = new Intent("com.dbjtech.waiqin.destroy");
+          sendBroadcast(intent);
+          super.onDestroy();
+      }
+  ```
 
-```java
-    @Override
-    public void onDestroy() {
-        stopForeground(true);
-        Intent intent = new Intent("com.dbjtech.waiqin.destroy");
-        sendBroadcast(intent);
-        super.onDestroy();
-    }
-```
+-  service+broadcast方式： 
 
-在BootReceiver里
+  定义一个广播：
 
 ```java
-public class BootReceiver extends BroadcastReceiver {
- 
+public class BaseReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("com.dbjtech.waiqin.destroy")) {
-            //TODO
-            //在这里写重新启动service的相关操作
-                startUploadService(context);
+        if (intent.getAction().equals("com.my.learn.code.basereceiver")){
+            Intent sintent=new Intent("com.my.learn.code.BaseService");
+            startService(sintent);
         }
- 
     }
- 
 }
+
+<receiver android:name="com.my.learn.code.BaseReceiver" >  
+    <intent-filter> 
+        <action android:name="android.intent.action.BOOT_COMPLETED" />  
+        <action android:name="android.intent.action.USER_PRESENT" />  
+        <action android:name="com.my.learn.code.basereceiver" />//这个就是自定义的action  
+    </intent-filter>  
+</receiver>  
+
+            
+//在onDestory中：
+
+Intent intent = new Intent("com.my.learn.code.basereceiver");  
+    sendBroadcast(intent);  
 ```
 
 **3.onStartCommand方法，返回START_STICKY**
 
 ```java
-    @Override
+/*
+在运行onStartCommand后service进程被杀死后，那将保留在开始状态，但不会保留那些传入的intent。不久后service就会再次尝试重新创建，因为保留在开始状态，在创建 service后将保证调用onstartCommand。如果没有传递任何开始命令给service，那获取到的Intent为null。手动返回START_STICKY，亲测当service因内存不足被kill，当内存又有的时候，service又被重新创建，但是不能保证任何情况下都被重建，比如进程被干掉了….　
+*/
+@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         flags = START_STICKY;
         return super.onStartCommand(intent, flags, startId);
     }
 ```
 
-`4.**提升service进程优先级**
-在onStartCommand方法内添加如下代码：
+4.**提升service进程优先级**
+
+Android中将进程**分成6个等级**，**由高到低分别是：前台进程、可视进程、次要服务进程、后台进程、内容供应节点以及空进程**。当系统进程空间紧张时，会按照优先级自动进行进程回收。可以使用startForeground()将服务设置为前台进程。在onStartCommand中添加如下代码：
 
 ```java
          Notification notification = new Notification(R.drawable.ic_launcher,
@@ -776,6 +795,10 @@ public class BootReceiver extends BroadcastReceiver {
          notification.setLatestEventInfo(this, "uploadservice", "请保持程序在后台运行",
          pendingintent);
         startForeground(0x111, notification);
+
+//在onDestory加上：
+
+ stopForeground(true);
 ```
 
 **二.利用系统特性的方法**
@@ -787,29 +810,29 @@ public class BootReceiver extends BroadcastReceiver {
 通过系统的一些广播，比如：手机重启、界面唤醒、应用状态改变等等监听并捕获到，然后判断我们的Service是否还存活，别忘记加权限啊。
 
 ```java
-        <receiver android:name="com.dbjtech.acbxt.waiqin.BootReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
-                <action android:name="com.dbjtech.waiqin.destroy" />
-            </intent-filter>
-        </receiver>
-```
-
-BroadcastReceiver中：
-
-```java
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            System.out.println("手机开机了....");
-            startUploadService(context);
-        }
-        if (Intent.ACTION_USER_PRESENT.equals(intent.getAction())) {
-                startUploadService(context);
+   public class MonitorReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+                Log.v(TAG,"手机开机");
+                Intent sintent=new Intent("com.my.learn.code.BaseService");
+                startService(sintent);
+            }
+            if (Intent.ACTION_USER_PRESENT.equals(intent.getAction())) {
+                Log.v(TAG,"解锁");
+                Intent sintent=new Intent("com.my.learn.code.BaseService");
+                startService(sintent);
+            }
         }
     }
+    <receiver android:name="com.my.learn.code.MonitorReceiver" >  
+    <intent-filter>  
+        <action android:name="android.intent.action.BOOT_COMPLETED" />  
+        <action android:name="android.intent.action.USER_PRESENT" />  
+        <action android:name="android.intent.action.PACKAGE_RESTARTED" />  
+        <action android:name="com.my.learn.code.monitor" />
+    </intent-filter>  
+</receiver> 
 ```
 
 2.特殊手机监听特殊推送，例如小米手机注册小米推送
@@ -825,10 +848,12 @@ IntentService 是Service 的子类，它使用工作线程逐一处理所有启�
 **那么我们当我们编写的耗时逻辑，不得不被service来管理的时候，就需要引入IntentService，IntentService是继承Service的，那么它包含了Service的全部特性，当然也包含service的生命周期，那么与service不同的是，IntentService在执行onCreate操作的时候，内部开了一个线程，去你执行你的耗时操作**。
 Service中提供了一个方法：
 
-   public int onStartCommand(Intent intent, int flags, int startId) {
+```java
+  public int onStartCommand(Intent intent, int flags, int startId{
         onStart(intent, startId);
         return mStartCompatibility ? START_STICKY_COMPATIBILITY : START_STICKY;
     }
+```
 
 这个方法的具体含义是，当你的需要这个service启动的时候，或者调用这个servcie的时候，那么这个方法首先是要被回调的。
 
@@ -842,69 +867,71 @@ protected abstract void onHandleIntent(Intent intent);
 public class ChargeService extends IntentService 
 上面提到过IntentService是继承Service的，那么这个子类也肯定继承service，那么onHandleIntent()方法是什么时候被调用的呢？让我们具体看IntentService的内部实现：
 
-    private final class ServiceHandler extends Handler {
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-     
-        @Override
-        public void handleMessage(Message msg) {
-            onHandleIntent((Intent)msg.obj);
-            stopSelf(msg.arg1);
-        }
+```java
+private final class ServiceHandler extends Handler {
+    public ServiceHandler(Looper looper) {
+        super(looper);
     }
-     
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public IntentService(String name) {
-        super();
-        mName = name;
-    }
-     
-    /**
-     * Sets intent redelivery preferences.  Usually called from the constructor
-     * with your preferred semantics.
-     *
-     * <p>If enabled is true,
-     * {@link #onStartCommand(Intent, int, int)} will return
-     * {@link Service#START_REDELIVER_INTENT}, so if this process dies before
-     * {@link #onHandleIntent(Intent)} returns, the process will be restarted
-     * and the intent redelivered.  If multiple Intents have been sent, only
-     * the most recent one is guaranteed to be redelivered.
-     *
-     * <p>If enabled is false (the default),
-     * {@link #onStartCommand(Intent, int, int)} will return
-     * {@link Service#START_NOT_STICKY}, and if the process dies, the Intent
-     * dies along with it.
-     */
-    public void setIntentRedelivery(boolean enabled) {
-        mRedelivery = enabled;
-    }
-     
+ 
     @Override
-    public void onCreate() {
-        // TODO: It would be nice to have an option to hold a partial wakelock
-        // during processing, and to have a static startService(Context, Intent)
-        // method that would launch the service & hand off a wakelock.
-     
-        super.onCreate();
-        HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
-        thread.start();
-     
-        mServiceLooper = thread.getLooper();
-        mServiceHandler = new ServiceHandler(mServiceLooper);
+    public void handleMessage(Message msg) {
+        onHandleIntent((Intent)msg.obj);
+        stopSelf(msg.arg1);
     }
-     
-    @Override
-    public void onStart(Intent intent, int startId) {
-        Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        msg.obj = intent;
-        mServiceHandler.sendMessage(msg);
-    }
+}
+ 
+/**
+ * Creates an IntentService.  Invoked by your subclass's constructor.
+ *
+ * @param name Used to name the worker thread, important only for debugging.
+ */
+public IntentService(String name) {
+    super();
+    mName = name;
+}
+ 
+/**
+ * Sets intent redelivery preferences.  Usually called from the constructor
+ * with your preferred semantics.
+ *
+ * <p>If enabled is true,
+ * {@link #onStartCommand(Intent, int, int)} will return
+ * {@link Service#START_REDELIVER_INTENT}, so if this process dies before
+ * {@link #onHandleIntent(Intent)} returns, the process will be restarted
+ * and the intent redelivered.  If multiple Intents have been sent, only
+ * the most recent one is guaranteed to be redelivered.
+ *
+ * <p>If enabled is false (the default),
+ * {@link #onStartCommand(Intent, int, int)} will return
+ * {@link Service#START_NOT_STICKY}, and if the process dies, the Intent
+ * dies along with it.
+ */
+public void setIntentRedelivery(boolean enabled) {
+    mRedelivery = enabled;
+}
+ 
+@Override
+public void onCreate() {
+    // TODO: It would be nice to have an option to hold a partial wakelock
+    // during processing, and to have a static startService(Context, Intent)
+    // method that would launch the service & hand off a wakelock.
+ 
+    super.onCreate();
+    HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
+    thread.start();
+ 
+    mServiceLooper = thread.getLooper();
+    mServiceHandler = new ServiceHandler(mServiceLooper);
+}
+ 
+@Override
+public void onStart(Intent intent, int startId) {
+    Message msg = mServiceHandler.obtainMessage();
+    msg.arg1 = startId;
+    msg.obj = intent;
+    mServiceHandler.sendMessage(msg);
+}
+```
 
 在这里我们可以清楚的看到其实IntentService在执行onCreate的方法的时候，其实开了一个线程HandlerThread,并获得了当前线程队列管理的looper，并且在onStart的时候，把消息置入了消息队列，
 
@@ -1725,7 +1752,7 @@ WindowManagerService服务的实现是相当复杂的，毕竟它要管理的整
 - 为所有窗口分配Surface。客户端向WMS添加一个窗口的过程，其实就是WMS为其分配一块Suiface的过程，一块块Surface在WMS的管理下有序的排布在屏幕上。Window的本质就是Surface。
 - 管理Surface的显示顺序、尺寸、位置
 - 管理窗口动画
-- 输入系统相关：WMS是派发系统按键和触摸消息的最佳人选，当接收到一个触摸事件，它需要寻找一个最合适的窗口来处理消息，而WMS是窗口的管理者，系统中所有的窗口状态和信息都在其掌握之中，完成这一工作不在话下。
+- 输入系统相关：WMS是**派发系统按键和触摸消息**的最佳人选，当接收到一个触摸事件，它需要寻找一个最合适的窗口来处理消息，而WMS是窗口的管理者，系统中所有的窗口状态和信息都在其掌握之中，完成这一工作不在话下。
 
 ###### 什么是Window
 
@@ -1906,9 +1933,9 @@ AMS的工作流程，其实就是Activity的启动和调度的过程，所有的
 
 
 #### 13，Service在清单中的声明：&nbsp;
-&emsp;尽管Service分为启动和绑定两种状态，和其他组件一样，想要使用Service，就必须在清单文件中对其进行声明。声明方式是添加<service>元素作为<application>元素的子元素但无论哪种具体的Service启动类型，都是通过继承Service基类自定义的，也都需要在AndroidMinifest.xml中声明，了解这两种状态之前，需要先在AndroidMinifest.xml中先声明一下.
+&emsp;尽管Service分为**启动和绑定两种状态**，和其他组件一样，想要使用Service，就必须在清单文件中对其进行声明。声明方式是添加<service>元素作为<application>元素的子元素但无论哪种具体的Service启动类型，都是通过继承Service基类自定义的，也都需要在AndroidMinifest.xml中声明，了解这两种状态之前，需要先在AndroidMinifest.xml中先声明一下.
 
-```
+```java
 <application
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
@@ -1917,7 +1944,6 @@ AMS的工作流程，其实就是Activity的启动和调度的过程，所有的
     android:theme="@style/AppTheme">
     <service android:name=".MyService/>
 </application>
->
 ```
 ① Android:exported:代表服务是否能被其他应用隐式的调用，其Service默认值是由无intent-filter决定的。如果有，则为true，反之则为false。在false的状态的之后，即使有intent-fileter，也无法匹配，即无法被其他应用隐式调用。
 
@@ -2060,7 +2086,7 @@ public class BackService extends Service {
 **前台调用**
 通过以下方式绑定服务：
 
-```text
+```java
 bindService(mIntent,con,BIND_AUTO_CREATE);
 ```
 
@@ -2093,9 +2119,9 @@ private ServiceConnection con = new ServiceConnection() {
 
 ##### 4.前台服务
 
-所谓前台服务只不是通过一定的方式将服务所在的进程级别提升了。前台服务会一直有一个正在运行的图标在系统的状态栏显示，非常类似于通知的效果。
+**所谓前台服务只不是通过一定的方式将服务所在的进程级别提升了。前台服务会一直有一个正在运行的图标在系统的状态栏显示，非常类似于通知的效果**。
 
-由于后台服务优先级相对比较低，当系统出现内存不足的情况下，它就有可能会被回收掉，所以前台服务就是来弥补这个缺点的，它可以一直保持运行状态而不被系统回收。
+由于后台服务优先级相对比较低，当系统出现内存不足的情况下，它就有可能会被回收掉，**所以前台服务就是来弥补这个缺点的，它可以一直保持运行状态而不被系统回收。**
 
 **创建服务类**
 前台服务创建很简单，其实就在Service的基础上创建一个Notification，然后使用Service的startForeground()方法即可启动为前台服务。
@@ -2215,7 +2241,7 @@ mBuilder = new NotificationCompat.Builder(this).setContent(view)
 
 #### 4，绑定Service:
 
- &emsp;&emsp;绑定Service是服务的另一种变形，在Service处于绑定状态时，其代表着客户端-服务器接口中的服务器。当其他组件（如Activity）绑定到服务时（有时需要从Activity组件中调用Service方法，此时Activity以绑定的方式挂靠到Service后，就可以方便的方法到Service中指定的方法）。组件（如Activity）可以向Service发送请求，或者时调用Service中的方法，此时绑定的服务会接受信息并响应，甚至可以绑定服务进行进程间的通信（即IPC）。与启动服务不同的是，绑定服务时，只会在为其他组件服务时才会处于活动状态，不会无限期的在后台运行，即宿主在解除绑定时，绑定服务就会被销毁。在提供绑定服务时，必须提供一个IBinder接口，的实现类，该类用以提供客户端用来与服务进行交互的接口，有三种方法：
+ &emsp;&emsp;绑定Service是服务的另一种变形，在Service处于绑定状态时，其代表着客户端-服务器接口中的服务器。当其他组件（如Activity）绑定到服务时（有时需要从Activity组件中调用Service方法，此时Activity以绑定的方式挂靠到Service后，就可以方便的方法到Service中指定的方法）。组件（如Activity）可以向Service发送请求，或者时调用Service中的方法，**此时绑定的服务会接受信息并响应，甚至可以绑定服务进行进程间的通信（即IPC）**。与启动服务不同的是，绑定服务时，只会在为其他组件服务时才会处于活动状态，不会无限期的在后台运行，即宿主在解除绑定时，绑定服务就会被销毁。在提供绑定服务时，必须提供一个IBinder接口，的实现类，该类用以提供客户端用来与服务进行交互的接口，有三种方法：
 > -  扩展Binder类：
 > 	如果服务是提供给自有应用专用的，并且Service与客户端相同的进程中运行，则应通过扩展Binder类并从onBind()方法返回一个实例来创建接口，客户端接收到binder之后，可以直接访问Binder方法以及实现Service中可用的公共方法。如果服务是自有应用的后台工作线程。则优先采用采用此方法。不采用该方式创建接口的唯一原因是，服务被其他应用或者线程调用。
 > - 使用Messenger:
@@ -2270,15 +2296,15 @@ Messenger使用的主要步骤：
 #### 5.关于启动服务与绑定服务间的转换问题
 
 通过前面对两种服务状态的分析，相信大家已对Service的两种状态有了比较清晰的了解，那么现在我们就来分析一下当启动状态和绑定状态同时存在时，又会是怎么的场景？
-  虽然服务的状态有启动和绑定两种，但实际上一个服务可以同时是这两种状态，也就是说，它既可以是启动服务（以无限期运行），也可以是绑定服务。有点需要注意的是Android系统仅会为一个Service创建一个实例对象，所以不管是启动服务还是绑定服务，操作的是同一个Service实例，而且由于绑定服务或者启动服务执行顺序问题将会出现以下两种情况：
+  虽然服务的状态有启动和绑定两种，但**实际上一个服务可以同时是这两种状态**，也就是说，它既可以是启动服务（以无限期运行），也可以是绑定服务。有点需要注意的是Android系统仅会为一个Service创建一个实例对象，所以不管是启动服务还是绑定服务，操作的是同一个Service实例，而且由于绑定服务或者启动服务执行顺序问题将会出现以下两种情况：
 
 - 先绑定服务后启动服务
 
-如果当前Service实例先以绑定状态运行，然后再以启动状态运行，那么绑定服务将会转为启动服务运行，这时如果之前绑定的宿主（Activity）被销毁了，也不会影响服务的运行，服务还是会一直运行下去，指定收到调用停止服务或者内存不足时才会销毁该服务。
+**如果当前Service实例先以绑定状态运行，然后再以启动状态运行，那么绑定服务将会转为启动服务运行，这时如果之前绑定的宿主（Activity）被销毁了，也不会影响服务的运行，服务还是会一直运行下去，指定收到调用停止服务或者内存不足时才会销毁该服务**。
 
 - 先启动服务后绑定服务
 
-如果当前Service实例先以启动状态运行，然后再以绑定状态运行，当前启动服务并不会转为绑定服务，但是还是会与宿主绑定，只是即使宿主解除绑定后，服务依然按启动服务的生命周期在后台运行，直到有Context调用了stopService()或是服务本身调用了stopSelf()方法抑或内存不足时才会销毁服务。
+**如果当前Service实例先以启动状态运行，然后再以绑定状态运行，当前启动服务并不会转为绑定服务，但是还是会与宿主绑定，只是即使宿主解除绑定后，服务依然按启动服务的生命周期在后台运行，直到有Context调用了stopService()或是服务本身调用了stopSelf()方法抑或内存不足时才会销毁服务。**
 
 以上两种情况显示出启动服务的优先级确实比绑定服务高一些。不过无论Service是处于启动状态还是绑定状态，或处于启动并且绑定状态，我们都可以像使用Activity那样通过调用 Intent 来使用服务(即使此服务来自另一应用)。 当然，我们也可以通过清单文件将服务声明为私有服务，阻止其他应用访问。最后这里有点需要特殊说明一下的，由于服务在其托管进程的主线程中运行（UI线程），它既不创建自己的线程，也不在单独的进程中运行（除非另行指定）。 这意味着，如果服务将执行任何耗时事件或阻止性操作（例如 MP3 播放或联网）时，则应在服务内创建新线程来完成这项工作，简而言之，耗时操作应该另起线程执行。只有通过使用单独的线程，才可以降低发生“应用无响应”(ANR) 错误的风险，这样应用的主线程才能专注于用户与 Activity 之间的交互， 以达到更好的用户体验。
 

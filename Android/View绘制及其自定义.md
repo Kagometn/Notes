@@ -1,5 +1,9 @@
 # View绘制
 
+
+
+![IMG_20200224_232053](View绘制及其自定义.assets/IMG_20200224_232053.jpg)
+
 ## ViewPager
 
 #### 1.什么是ViewPager?说说它的那些适配器
@@ -221,41 +225,7 @@ ViewPager继承自ViewGroup，自然只能嵌套View。如果实在要嵌套Acti
 
  https://www.jianshu.com/p/38ab6d856b56 
 
-## 3.15 View事件分发机制
-
- https://juejin.im/post/5dcbc6ad5188250cfe60cf48#heading-0 
-
-
-
-#### 1.什么是事件分发机制？主要用来解决什么问题？
-
-
-
-#### 2.给我说说事件分发的流程 & 你项目解决事件冲突的一些案例。
-
-
-
-#### 3.分别讲讲有关事件分发的三个方法的作用及关系。
-
-#### 4.如果我在一个设置了点击事件的TextView中dispatchTouchEvent方法强制回ture或者false会发生什么？
-
-true和false的区别是true会执行`action_down`、`action_move`和`action_up`，而如果直接返回false只会执行到action_down。并且后续的viewgroup的`onInterceptTouchEvent`后续方法都不会被执行到。
-
-
-
-#### 5.谈谈你对MotionEvent的认识？Cancel事件是什么情况下触发的？
-
-#### 6.线性布局A下面放置一个Button,如果给Button设置了点击事件，在线性布局A中重写了dispatchTouchEvent,onInterceptHoverEvent，而且它们都回了true,那么Button的点击事件会被调用吗？当前Activity的onTouchEvent又是否会被调用呢？为什么？
-
-
-
-#### 7.多点触摸事件平时接触过吗？如何监听用户第二个手指，第三个...？
-
-#### 8.OnTouchListener & OnTouchEvent & OnClickListener三者之间的关系？
-
-#### 9.谈谈你对MotionEvent的认识？Cancel事件是什么情况下触发的？
-
-#### 10.能给我谈谈Android中坐标体系吗？
+#### 
 
 ## 3.16 View绘制机制
 
@@ -319,15 +289,15 @@ ViewGroup.LayoutParams （View 自身的布局参数）
 
 MeasureSpecs 类（父视图对子视图的测量要求）
 
-ViewGroup.LayoutParams
+**ViewGroup.LayoutParams**
 
 这个类我们很常见，就是用来指定视图的高度和宽度等参数。对于每个视图的 height 和 width，你有以下选择：
 
-具体值
+- 具体值
 
-MATCH_PARENT 表示子视图希望和父视图一样大(不包含 padding 值)
+- MATCH_PARENT 表示子视图希望和父视图一样大(不包含 padding 值)
 
-WRAP_CONTENT 表示视图为正好能包裹其内容大小(包含 padding 值)
+- WRAP_CONTENT 表示视图为正好能包裹其内容大小(包含 padding 值)
 
 ViewGroup 的子类有其对应的 ViewGroup.LayoutParams 的子类。比如 RelativeLayout 拥有的 ViewGroup.LayoutParams 的子类 RelativeLayoutParams。
 
@@ -337,29 +307,29 @@ MeasureSpecs
 
 测量规格，包含测量要求和尺寸的信息，有三种模式:
 
-UNSPECIFIED
+- UNSPECIFIED
 
-父视图不对子视图有任何约束，它可以达到所期望的任意尺寸。比如 ListView、ScrollView，一般自定义 View 中用不到，
+  父视图不对子视图有任何约束，它可以达到所期望的任意尺寸。比如 ListView、ScrollView，一般自定义 View 中用不到，
 
-EXACTLY
+- EXACTLY
 
-父视图为子视图指定一个确切的尺寸，而且无论子视图期望多大，它都必须在该指定大小的边界内，对应的属性为 match_parent 或具体值，比如 100dp，父控件可以通过MeasureSpec.getSize(measureSpec)直接得到子控件的尺寸。
+  父视图为子视图指定一个确切的尺寸，而且无论子视图期望多大，它都必须在该指定大小的边界内，对应的属性为 match_parent 或具体值，比如 100dp，父控件可以通过MeasureSpec.getSize(measureSpec)直接得到子控件的尺寸。
 
-AT_MOST
+- AT_MOST
 
-父视图为子视图指定一个最大尺寸。子视图必须确保它自己所有子视图可以适应在该尺寸范围内，对应的属性为 wrap_content，这种模式下，父控件无法确定子 View 的尺寸，只能由子控件自己根据需求去计算自己的尺寸，这种模式就是我们自定义视图需要实现测量逻辑的情况。
+  父视图为子视图指定一个最大尺寸。子视图必须确保它自己所有子视图可以适应在该尺寸范围内，对应的属性为 wrap_content，这种模式下，父控件无法确定子 View 的尺寸，只能由子控件自己根据需求去计算自己的尺寸，这种模式就是我们自定义视图需要实现测量逻辑的情况。
 
-\3. measure 核心方法
+3. measure 核心方法
 
-measure(int widthMeasureSpec, int heightMeasureSpec)
+- measure(int widthMeasureSpec, int heightMeasureSpec)
 
 该方法定义在View.java类中，为 final 类型，不可被复写，但 measure 调用链最终会回调 View/ViewGroup 对象的onMeasure()方法，因此自定义视图时，只需要复写onMeasure()方法即可。
 
-onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+- onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 
 该方法就是我们自定义视图中实现测量逻辑的方法，该方法的参数是父视图对子视图的 width 和 height 的测量要求。在我们自身的自定义视图中，要做的就是根据该 widthMeasureSpec 和 heightMeasureSpec 计算视图的 width 和 height，不同的模式处理方式不同。
 
-setMeasuredDimension()
+- setMeasuredDimension()
 
 测量阶段终极方法，在onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法中调用，将计算得到的尺寸，传递给该方法，测量阶段即结束。该方法也是必须要调用的方法，否则会报异常。在我们在自定义视图的时候，不需要关心系统复杂的 Measure 过程的，只需调用setMeasuredDimension()设置根据 MeasureSpec 计算得到的尺寸即可，你可以参考[ViewPagerIndicator](https://link.jianshu.com?t=https://github.com/android-cn/android-open-project-analysis/tree/master/view-pager-indicator)的 onMeasure 方法。
 
@@ -371,7 +341,7 @@ setMeasuredDimension()
 
 #### 2.说说Activity View树结构
 
- ![img](View绘制及其自定义.assets/3524195-c299f7acef6f50a8.png) 
+ <img src="View绘制及其自定义.assets/3524195-c299f7acef6f50a8.png" alt="img" style="zoom:50%;" /> 
 
 可以看出：
 
@@ -380,19 +350,19 @@ Window 负责窗口管理（实际是子类 PhoneWindow， Window 的具体通�
 DecorView 是 被分为两部分：ActionBar 部分（一般开发过程中都会隐藏，采用 google 推荐的 ToolBar）和 id 为 content的FragmentLayout部分，我们 setContentView(@LayoutRes int layoutResID) 设置的Activity XML布局就是在FragmentLayout中
 layout.xml 是开发人员定义的布局文件，最终将被加载为DecorView的子组件
 
+
+
+
+
 ### 坐标系的计算
 
-android坐标系分为两类： 绝对坐标系（相对于设备的屏幕）和相对坐标系也称视图坐标系（相对于父控件）。
+android坐标系分为两类： **绝对坐标系（相对于设备的屏幕）和相对坐标系也称视图坐标系**（相对于父控件）。
 
-1. 
+#### 绝对坐标系 
 
-   
+1. 如图所示：
 
-    绝对坐标系 如图所示：
-
-   ![img](View绘制及其自定义.assets/3524195-27194d03fcfa8df2.png)
-
-   绝对坐标系.png
+   <img src="View绘制及其自定义.assets/3524195-27194d03fcfa8df2.png" alt="img" style="zoom:50%;" />
 
 在Android中，将屏幕的左上角的顶点作为Android坐标系的原点，这个原点向右是X轴正方向，原点向下是Y轴正方向。在这里主要强调MotionEvent触摸事件的getRawX()和getRawY():是获取的绝对坐标，还有绝对坐标经常需要计算的几个方法,在执行测量的系统方法是，需要在布局加载出来之后进行 一般在onWindowFocusChanged(boolean hasFocus)方法中执行 ：
 
@@ -431,15 +401,13 @@ Rect rect = new Rect();
 getWindow().findViewById(Window.ID_ANDROID_CONTENT).getDrawingRect(rect);
 ```
 
-1. 
 
-   
 
-    视图坐标系 如图所示：
+#### 视图坐标系 
 
-   ![img](View绘制及其自定义.assets/3524195-e6af55b9c1f11ff8.png)
+如图所示：
 
-   视图坐标系.png
+<img src="View绘制及其自定义.assets/3524195-e6af55b9c1f11ff8.png" alt="img" style="zoom:50%;" />
 
 视图坐标系其实就是我们在自定义控件，绘制过程中参考的坐标系，也就是View自身相对于父控件的距离，一般获取坐标的方法有：
 
@@ -481,7 +449,7 @@ getRawY()
 
  总结来说，自定义控件的实现有三种方式，分别是：组合控件、自绘控件和继承控件。下面将分别对这三种方式进行介绍。 
 
-一）组合控件
+##### 一）组合控件
 
 　　组合控件，顾名思义就是将一些小的控件组合起来形成一个新的控件，这些小的控件多是系统自带的控件。比如很多应用中普遍使用的标题栏控件，其实用的就是组合控件，那么下面将通过实现一个简单的标题栏自定义控件来说说组合控件的用法。
 
@@ -495,7 +463,7 @@ getRawY()
 
  4、在MainActivity中获取自定义的标题栏，并且为返回按钮添加自定义点击事件： 
 
-（二）自绘控件
+##### （二）自绘控件
 
 　　自绘控件的内容都是自己绘制出来的，在View的onDraw方法中完成绘制。下面就实现一个简单的计数器，每点击它一次，计数值就加1并显示出来。
 
@@ -503,21 +471,16 @@ getRawY()
 
  2、在activity_main.xml中引入该自定义布局： 
 
-（三）继承控件
+##### （三）继承控件
 
 　　就是继承已有的控件，创建新控件，保留继承的父控件的特性，并且还可以引入新特性。下面就以支持横向滑动删除列表项的自定义ListView的实现来介绍。
 
-1、创建删除按钮布局delete_btn.xml，这个布局是在横向滑动列表项后显示的：
-
- 2、创建CustomListView类，继承自ListView，并实现了OnTouchListener和OnGestureListener接口： 
-
- 3、定义列表项布局custom_listview_item.xml，它的结构很简单，只包含了一个TextView： 
-
- 4、定义适配器类CustomListViewAdapter，继承自ArrayAdapter<String>： 
-
- 5、在activity_main.xml中引入自定义的ListView： 
-
- 6、在MainActivity中对列表做初始化、设置列表项删除按钮点击事件等处理： 
+- 创建删除按钮布局delete_btn.xml，这个布局是在横向滑动列表项后显示的：
+- 创建CustomListView类，继承自ListView，并实现了OnTouchListener和OnGestureListener接口： 
+- 定义列表项布局custom_listview_item.xml，它的结构很简单，只包含了一个TextView： 
+- 定义适配器类CustomListViewAdapter，继承自ArrayAdapter<String>： 
+- 在activity_main.xml中引入自定义的ListView： 
+- 在MainActivity中对列表做初始化、设置列表项删除按钮点击事件等处理： 
 
 
 
@@ -569,7 +532,7 @@ Android系统的控件以android开头的都是系统自带的属性。为了方
 3. 在布局文件中View使用自定义的属性（注意namespace）
 4. 在View的构造方法中通过TypedArray获取
 
-## 实例说明
+##### 实例说明
 
 - 自定义属性的声明文件
 
@@ -605,7 +568,7 @@ public class MyTextView extends View {
 
 - 布局文件中使用
 
-```
+```JAVA
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res/com.example.test"
@@ -619,140 +582,122 @@ public class MyTextView extends View {
         app:text="helloworld" />
 
 </RelativeLayout>
-复制代码
 ```
 
-## 属性值的类型format
+##### 属性值的类型format
 
 (1). reference：参考某一资源ID
 
 - 属性定义：
 
-```
+```JAVA
 <declare-styleable name = "名称">
      <attr name = "background" format = "reference" />
 </declare-styleable>
-复制代码
 ```
 
 - 属性使用：
 
-```
+```java
 <ImageView android:background = "@drawable/图片ID"/>
-复制代码
 ```
 
 (2). color：颜色值
 
 - 属性定义：
 
-```
+```JAVA
 <attr name = "textColor" format = "color" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <TextView android:textColor = "#00FF00" />
-复制代码
 ```
 
 (3). boolean：布尔值
 
-- 属性定义：
+- 属性定义
 
-```
+```JAVA
 <attr name = "focusable" format = "boolean" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <Button android:focusable = "true"/>
-复制代码
 ```
 
 (4). dimension：尺寸值
 
 - 属性定义：
 
-```
+```JAVA
 <attr name = "layout_width" format = "dimension" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <Button android:layout_width = "42dip"/>
-
-复制代码
 ```
 
 (5). float：浮点值
 
 - 属性定义：
 
-```
+```java
 <attr name = "fromAlpha" format = "float" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <alpha android:fromAlpha = "1.0"/>
-复制代码
 ```
 
 (6). integer：整型值
 
 - 属性定义：
 
-```
+```JAVA
 <attr name = "framesCount" format="integer" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <animated-rotate android:framesCount = "12"/>
-复制代码
 ```
 
 (7). string：字符串
 
 - 属性定义：
 
-```
+```JAVA
 <attr name = "text" format = "string" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <TextView android:text = "我是文本"/>
-复制代码
 ```
 
 (8). fraction：百分数
 
 - 属性定义：
 
-```
+```JAVA
 <attr name = "pivotX" format = "fraction" />
-复制代码
 ```
 
 - 属性使用：
 
-```
+```JAVA
 <rotate android:pivotX = "200%"/>
-复制代码
 ```
 
 (9). enum：枚举值
@@ -951,3 +896,4 @@ LinearLayout 是ViewGroup 的子类
 # 面试重点：
 
  https://www.jianshu.com/p/1f5d6faa0f43 
+

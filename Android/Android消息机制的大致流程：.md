@@ -1,7 +1,67 @@
 [TOC]
 
+&emsp;&ensp;
 
-&emsp;&ensp;Handler是Android消息机制的上层接口，这使得在开发过程中，只需要和Handler交互即可，通过它很方便的将线程切换到Handler所在的线程中。
+#### 1.0  消息机制使用场景：
+
+消息机制中主要用于多线程的通讯，在 Android 开发中最常见的使用场景是：在子线程做耗时操作，操作完成后需要在主线程更新 UI（子线程不能直接修改 UI）。这时就需要用到消息机制来完成子线程和主线程的通讯。
+
+
+
+如以下代码片段所示：
+
+
+
+```java
+public class MainActivity extends AppCompatActivity {
+    private TextView tvText;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            tvText.setText(msg.obj.toString());
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tvText = (TextView) findViewById(R.id.tv_text);
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Message msg = Message.obtain();
+                msg.obj = Thread.currentThread().getName();
+                mHandler.sendMessage(msg);
+            }
+        }.start();
+    }
+}
+```
+
+
+
+子线程阻塞 10 秒后发送消息更新 TextView，TextView 显示来源的线程名。
+
+这里有两个限制：
+
+1. 不能让阻塞发生在主线程，否则会发生 ANR
+2. 不能在子线程更新 TextView。
+
+所以只能在子线程阻塞 10 秒，然后通过 Handler 发送消息，Handler 处理获取到的消息并在主线程更新 TextView。
+
+### 1.1	概述
+
+Handler是Android消息机制的上层接口，这使得在开发过程中，只需要和Handler交互即可，通过它很方便的将线程切换到Handler所在的线程中。
 
 &emsp;&emsp;Android的消息机制主要指的是Handler的运行机制，handler的运行需要底层的MessageQueue以及Looper的支撑。
 
@@ -422,7 +482,7 @@ public Handler(Callback callback, boolean async) {
       }
   }
   //Looper与Handler的绑定过程，如果绑定之前没有调用Looper.prepare方法就会报错
-  // 2.通过Looper.myLooper()//从当前线程的TLS中获取当前线程的Looper对象
+  // 2.通过Looper.myLooper()//从当前线程的TLS(线程本地存储区)中获取当前线程的Looper对象
   mLooper = Looper.myLooper();//获取Looper对象
   // 3.如果Looper为空，抛出异常
   if (mLooper == null) {
@@ -544,6 +604,57 @@ public final void removeCallbacksAndMessages(Object token) {
 
 &ensp;&ensp;如上述代码，在创建Handler之处就先判断是否有内存泄漏。如果继承Handler的是匿名内部类或者是非静态内部类或者是本地内部类，则会提示有可能出现内存泄漏。一般Handler是在Activity或者是Fragment中，使用，匿名内部类，非静态内部类，本地内部类都会支持Activity对象，当Handler的生命周期比Activity长的时候，就会导致Activity的对象无法释放，从而导致内存泄漏。
 
+
+
+解决这个问题思路就是**使用静态内部类并继承Handler时**（或者也可以单独存放成一个类文件）。因为静态的**内部类不会持有外部类的引用，所以不会导致外部类实例的内存泄露。当你需要在静态内部类中调用外部的Activity时，我们可以使用弱引用来处理**。**另外关于同样也需要将Runnable设置为静态的成员属性。修改后不会导致内存泄露的代码如下：**
+
+```JAVA
+public class HandlerActivity extends Activity {
+    //创建一个2M大小的int数组
+    int[] datas=new int[1024*1024*2];
+//    Handler mHandler = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//        }
+//    };
+    /**
+     * 创建静态内部类
+     */
+    private static class MyHandler extends Handler{
+        //持有弱引用HandlerActivity,GC回收时会被回收掉.
+        private final WeakReference<HandlerActivity> mActivty;
+        public MyHandler(HandlerActivity activity){
+            mActivty =new WeakReference<HandlerActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            HandlerActivity activity=mActivty.get();
+            super.handleMessage(msg);
+            if(activity!=null){
+                //执行业务逻辑
+            }
+        }
+    }
+    private static final Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //执行我们的业务逻辑
+        }
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_handler_leak);
+        MyHandler myHandler=new MyHandler(this);
+        //解决了内存泄漏,延迟5分钟后发送
+        myHandler.postDelayed(myRunnable, 1000 * 60 * 5);
+    }
+}
+```
+
+
+
 ### MessageQueue
 MessageQueue主要包括两个主要的操作，就是插入和删除。而读取操作的本身就伴随着删除的操作，插入和读入对应的方法分别为enqueueMessage和next,其中enqueueMessage的作用是往消息队列中插入一条消息，而next的作用是从消息队列中取出一条消息并将其从消息队列中移除。
 
@@ -663,7 +774,172 @@ private Activity performLaunchActivity(ActivityClientRecord r, Intent customInte
 以上所有都是正常使用java创建类的思路去理解，而且相对应的Activity的一些生命周期的管理也是从这个类中开始的。
 
 
-## 其他补充
+
+# [Android应用程序消息处理机制](https://segmentfault.com/a/1190000002982318)
+
+
+
+Android的消息处理机制主要分为四个部分：
+
+- 创建消息队列
+- 消息循环
+- 消息发送
+- 消息处理
+
+主要涉及三个类：
+
+- MessageQueue
+- Looper
+- Handler
+
+Android应用程序每启动一个线程，都为其创建一个消息队列，然后进入到一个无限循环之中。然后不断检查队列中是否有新消息需要处理。如果没有，线程就会进入睡眠状态，反之会对消息进行分发处理。
+
+下面根据上面所说的进行详述。
+
+#### 创建消息队列
+
+整个创建过程涉及到两个类：MessageQueue 和 Looper。它们在C++层有两个对应的类：NativeMessageQueue和Looper。其关系如下图所示：
+
+```
+      +------------+     +------+
+      |MessageQueue+----^+Looper|
+      +-----+------+     +------+
+            |                    
+            |                    
+            |                    
++-----------+------+     +------+
+|NativeMessageQueue+^----+Looper|
++------------------+     +------+
+
+        A----^B表示B中保存A的引用
+```
+
+创建过程如下所示：
+
+1. Looper的prepare或者prepareMainLooper静态方法被调用，将一个Looper对象保存在ThreadLocal里面。
+2. Looper对象的初始化方法里，首先会新建一个MessageQueue对象。
+3. MessageQueue对象的初始化方法通过JNI初始化C++层的NativeMessageQueue对象。
+4. NativeMessageQueue对象在创建过程中，会初始化一个C++层的Looper对象。
+5. C++层的Looper对象在创建的过程中，会在内部创建一个管道（pipe），并将这个管道的读写fd都保存在mWakeReadPipeFd和mWakeWritePipeFd中。
+   然后新建一个epoll实例，并将两个fd注册进去。
+6. 利用epoll的机制，可以做到当管道没有消息时，线程睡眠在读端的fd上，当其他线程往管道写数据时，本线程便会被唤醒以进行消息处理。
+
+#### 消息循环
+
+```
+          +------+    +------------+  +------------------+  +--------------+                    
+          |Looper|    |MessageQueue|  |NativeMessageQueue|  |Looper(Native)|                    
+          +--+---+    +------+-----+  +---------+--------+  +-------+------+                    
+             |               |                  |                   |                           
+             |               |                  |                   |                           
++-------------------------------------------------------------------------------+               
+|[msg loop]  |   next()      |                  |                   |           |               
+|            +------------>  |                  |                   |           |               
+|            |               |                  |                   |           |               
+|            |               |                  |                   |           |               
+|            |               | nativePollOnce() |                   |           |               
+|            |               |    pollOnce()    |                   |           |               
+|            |               +----------------> |                   |           |               
+|            |               |                  |                   |           |              
+|            |               |                  |                   |           |               
+|            |               |                  |                   |           |               
+|            |               |                  |                   |           |               
+|            |               |                  |     pollOnce()    |           |               
+|            |               |                  +-----------------> |           |               
+|            |               |                  |                   |           |               
+|            |               |                  |                   | epoll_wait()              
+|            |               |                  |                   +--------+  |               
+|            |               |                  |                   |        |  |               
+|            |               |                  |                   |        |  |               
+|            |               |                  |                   | <------+  |               
+|            |               |                  |                   | awoken()  |               
+|            +               +                  +                   +           |               
+|                                                                               |               
+|                                                                               |               
++-------------------------------------------------------------------------------+               
+```
+
+1. 首先通过调用Looper的loop方法开始消息监听。loop方法里会调用MessageQueue的next方法。next方法会堵塞线程直到有消息到来为止。
+2. next方法通过调用nativePollOnce方法来监听事件。next方法内部逻辑如下所示(简化)：
+   a. 进入死循环，以参数timout=0调用nativePollOnce方法。
+   b. 如果消息队列中有消息，nativePollOnce方法会将消息保存在mMessage成员中。nativePollOnce方法返回后立刻检查mMessage成员是否为空。
+   c. 如果mMessage不为空，那么检查它指定的运行时间。如果比当前时间要前，那么马上返回这个mMessage，否则设置timeout为两者之差，进入下一次循环。
+   d. 如果mMessage为空，那么设置timeout为-1，即下次循环nativePollOnce永久堵塞。
+3. nativePollOnce方法内部利用epoll机制在之前建立的管道上等待数据写入。接收到数据后马上读取并返回结果。
+
+#### 消息发送
+
+```
+          +-------+     +------------+   +------------------+   +--------------+                        
+          |Handler|     |MessageQueue|   |NativeMessageQueue|   |Looper(Native)|                        
+          +--+----+     +-----+------+   +---------+--------+   +-------+------+                        
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+sendMessage()|                |                    |                    |                               
++----------> |                |                    |                    |                               
+             |                |                    |                    |                               
+             |enqueueMessage()|                    |                    |                               
+             +--------------> |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |  nativeWake()      |                    |                               
+             |                |    wake()          |                    |                               
+             |                +------------------> |                    |                               
+             |                |                    |                    |                               
+             |                |                    |    wake()          |                               
+             |                |                    +------------------> |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |write(mWakeWritePipeFd, "W", 1)
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             |                |                    |                    |                               
+             +                +                    +                    +                               
+```
+
+消息发送过程主要由Handler对象来驱动。
+
+1. Handler对象在创建时会保存当前线程的looper和MessageQueue，如果传入Callback的话也会保存起来。
+2. 用户调用handler对象的sendMessage方法，传入msg对象。handler通过调用MessageQueue的enqueueMessage方法将消息压入MessageQueue。
+3. enqueueMessage方法会将传入的消息对象根据触发时间（when）插入到message queue中。然后判断是否要唤醒等待中的队列。
+   a. 如果插在队列中间。说明该消息不需要马上处理，不需要由这个消息来唤醒队列。
+   b. 如果插在队列头部（或者when=0），则表明要马上处理这个消息。如果当前队列正在堵塞，则需要唤醒它进行处理。
+4. 如果需要唤醒队列，则通过nativeWake方法，往前面提到的管道中写入一个"W"字符，令nativePollOnce方法返回。
+
+#### 消息处理
+
+```
+             +------+       +-------+                                                                   
+             |Looper|       |Handler|                                                                   
+             +--+---+       +---+---+                                                                   
+                |               |                                                                       
+    loop()      |               |                                                                       
+    [after next()]              |                                                                       
+    +---------> |               |                                                                       
+                |               |                                                                       
+                |dispatchMessage()                                                                      
+                +-------------> |                                                                       
+                |               |                                                                                                                                        
+                |               | handleMessage()                                                       
+                |               +-------+                                                               
+                |               |       |                                                               
+                |               |       |                                                               
+                |               | <-----+                                                               
+                |               |   (callback or subclass)                                              
+                |               |                                                                       
+                +               +                                                                       
+```
+
+Looper对象的loop方法里面的queue.next方法如果返回了message，那么handler的dispatchMessage会被调用。
+a. 如果新建Handler的时候传入了callback实例，那么callback的handleMessage方法会被调用。
+b. 如果是通过post方法向handler传入runnable对象的，那么runnable对象的run方法会被调用。
+c. 其他情况下，handler方法的handleMessage会被调用。
+
+
+# 其他补充
 - 一个线程中可以有多个handler，但是只能够有一个Looper
 - MessageQueue是有序的
 - 子线程可以创建Handler对象

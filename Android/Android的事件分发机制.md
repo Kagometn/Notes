@@ -4,6 +4,22 @@
 
 ![](Android的事件分发机制.assets/944365-e7baca065f885271.png)
 
+#### 1.0	为什么会有事件分发机制
+
+![image-20200224172831908](Android的事件分发机制.assets/image-20200224172831908.png)
+
+
+
+![image-20200224172854869](Android的事件分发机制.assets/image-20200224172854869.png)
+
+![image-20200224172915053](Android的事件分发机制.assets/image-20200224172915053.png)
+
+
+
+![image-20200224172957328](Android的事件分发机制.assets/image-20200224172957328.png)
+
+
+
 #### 1.1 什么是事件：
 
 了解事件的分发，首先需要了解什么是事件，这里的事件指的就是点击事件，当用户触摸屏幕的时候，将会产生点击事件(Touch事件)
@@ -88,11 +104,94 @@ Activity的UI界面由Activity,ViewGroup,View以及其派生类组成
   }
   ```
 
+
+
+#### 2.0 事件分发机制概述
+
+![image-20200224172654477](Android的事件分发机制.assets/image-20200224172654477.png)
+
+
+
+###### 责任链机制：
+
+定义：
+ 使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系，将这些对象形成一链条，并沿着这条链传递该请求，直到有对象处理它为止。
+
+使用场景：
+ 1、多个对象能够处理同一请求，具体处理则在运行时动态确定。
+ 2、在请求矗立着不明确的时候向多个对象提交同一个请求。
+ 3、需要动态制定一组对象处理请求。
+
+大致示意图：
+
+ ![img](Android的事件分发机制.assets/5186985-461b3999db89cfa9.webp) 
+
 #### 2.1  Activity的事件分发机制
 
 当一个点击事件发生的时候，事件最先传到Activity的dispatchTouchEvent()进行事件分发.
 
+责任链模式——Android事件分发机制
+ 在布局中点击一个按钮，activity、window、decorView三者之间首先得到事件响应的是activity，接着是window，再接着是decorView；
+ 大致是一个这样子的传递：
+ Activity---->Window---->decorView
 
+在点击按钮的时候，就会去调用activity中的dispatchTouchEvent方法；
+
+
+
+```java
+public boolean dispatchTouchEvent(MotionEvent ev) {
+    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+        onUserInteraction();
+    }
+    if (getWindow().superDispatchTouchEvent(ev)) {
+        return true;
+    }
+    return onTouchEvent(ev);
+}
+```
+
+接着就走到getWindow().superDispatchTouchEvent(ev)，调用的是Window类中的
+
+
+
+```csharp
+public abstract boolean superDispatchTouchEvent(MotionEvent event);
+```
+
+发现这是一个抽象方法，就要去找Window的实现类PhoneWindow
+
+
+
+```csharp
+@Override
+public boolean superDispatchTouchEvent(MotionEvent event) {
+    return mDecor.superDispatchTouchEvent(event);
+}
+```
+
+PhoneWindow类中superDispatchTouchEvent方法返回的是mDecor.superDispatchTouchEvent(event);调用的是DecorView中的superDispatchTouchEvent方法；
+
+
+
+```csharp
+public boolean superDispatchTouchEvent(MotionEvent event) {
+        return super.dispatchTouchEvent(event);
+    }
+```
+
+DecorView extends FrameLayout,而它返回的super.dispatchTouchEvent(event);，点进去就会到ViewGroup的dispatchTouchEvent方法；点击一个按钮，正常情况下，就是这样一步一步将事件传递下去，直到被消费处理掉。
+ 示意图(正常情况下)：
+
+![img](Android的事件分发机制.assets/5186985-a6a06ec3cbacfb7d.PNG))
+
+
+
+ ![img](Android的事件分发机制.assets/5186985-a6a06ec3cbacfb7d.webp) 
+
+
+
+上面这个只是一个正常的事件流程，其实Android的事件是很复杂的，其中就包含事件拦截、事件分发、事件处理。
 
 ##### 2.1.1源码分析
 
@@ -1019,7 +1118,7 @@ Demo详解：
 
 
 
-![img](C:/Users/Lenovo/Desktop/944365-a5e7cfed2cba02c3.PNG)
+![img](Android的事件分发机制.assets/944365-a5e7cfed2cba02c3-1582537984686.PNG)
 
 示意图
 
@@ -1119,7 +1218,7 @@ mOnTouchListener != null && (mViewFlags & ENABLED_MASK) == ENABLED &&
 
 #### 7. 总结
 
-- 一个事件序列只能被一个View拦截且消耗，一旦一个元素拦截了某次事件，那么同一个书简序列的所有时间都会直接交给处理，因此同一事件序列中的事件不能分别由两个View同时处理，但是通过特殊手段可以做到，比如一个View将本该自己处理的事件通过onTouchEvent强行传递给其他View处理。
+- 一个事件序列只能被一个View拦截且消耗，一旦一个元素拦截了某次事件，那么同一个事件序列的所有事件都会直接交给处理，因此同一事件序列中的事件不能分别由两个View同时处理，但是通过特殊手段可以做到，比如一个View将本该自己处理的事件通过onTouchEvent强行传递给其他View处理。
 - 某一个View一旦决定拦截，那么这个事件序列都只能由他来处理，并且他的onInterceptTouchEvent不会再被调用。
 - 某个View一旦开始处理事件，如果他不消耗ACTION_DOWN事件，那么统一事件序列中的其他事件都不会再交给他来处理，并且将事件重新交由他的父元素去处理，即父元素的onTouchEvent会被调用。
 - 如果View不消耗ACTION_DOWN意外的其他事件，那么这个点击事件就会消失，此时父元素的onTouchEvent并不会被调用，并且当前View可以持续接收到后续的事件，最终这些消失的点击事件会传递给Activity处理
@@ -1129,3 +1228,41 @@ mOnTouchListener != null && (mViewFlags & ENABLED_MASK) == ENABLED &&
    [（2）自定义View Measure过程 - 最易懂的自定义View原理系列](https://www.jianshu.com/p/1dab927b2f36)
    [（3）自定义View Layout过程 - 最易懂的自定义View原理系列](https://www.jianshu.com/p/158736a2549d)
    [（4）自定义View Draw过程- 最易懂的自定义View原理系列](https://www.jianshu.com/p/95afeb7c8335)
+
+
+
+## 3.15 View事件分发机制
+
+ https://juejin.im/post/5dcbc6ad5188250cfe60cf48#heading-0 
+
+
+
+#### 1.什么是事件分发机制？主要用来解决什么问题？
+
+
+
+#### 2.给我说说事件分发的流程 & 你项目解决事件冲突的一些案例。
+
+
+
+#### 3.分别讲讲有关事件分发的三个方法的作用及关系。
+
+#### 4.如果我在一个设置了点击事件的TextView中dispatchTouchEvent方法强制回ture或者false会发生什么？
+
+true和false的区别是true会执行`action_down`、`action_move`和`action_up`，而如果直接返回false只会执行到action_down。并且后续的viewgroup的`onInterceptTouchEvent`后续方法都不会被执行到。
+
+
+
+#### 5.谈谈你对MotionEvent的认识？Cancel事件是什么情况下触发的？
+
+#### 6.线性布局A下面放置一个Button,如果给Button设置了点击事件，在线性布局A中重写了dispatchTouchEvent,onInterceptHoverEvent，而且它们都回了true,那么Button的点击事件会被调用吗？当前Activity的onTouchEvent又是否会被调用呢？为什么？
+
+
+
+#### 7.多点触摸事件平时接触过吗？如何监听用户第二个手指，第三个...？
+
+#### 8.OnTouchListener & OnTouchEvent & OnClickListener三者之间的关系？
+
+#### 9.谈谈你对MotionEvent的认识？Cancel事件是什么情况下触发的？
+
+#### 10.能给我谈谈Android中坐标体系吗？

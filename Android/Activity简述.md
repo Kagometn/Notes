@@ -117,7 +117,7 @@ onPause（）是你对于用户离开界面的处理。最重要的是，此时�
 
 http://blog.csdn.net/a872822645/article/details/62217965
 
-10.当用户在其他的Activity或者桌面回切到这个Activity时，这个Activity就会先去执行onRestart()函数，Restart有“重新开始”的意思，然后接下来执行onStart()函数，接着执行onResume()函数进入到运行状态。
+10.**当用户在其他的Activity或者桌面回切到这个Activity时，这个Activity就会先去执行onRestart()函数**，Restart有“重新开始”的意思，然后接下来执行onStart()函数，接着执行onResume()函数进入到运行状态。
 
 11.在“10”中讲的很清楚了。
 
@@ -128,22 +128,22 @@ http://blog.csdn.net/a872822645/article/details/62217965
 ##### 下面来着重说明一下Activity每个生命周期函数：
 
 onCreate():
- 表示Activity正在被创建，这是Activity生命周期的第一个方法。通常我们程序员要在此函数中做初始化的工作，比如：绑定布局，控件，初始化数据等。
+ 表示Activity正在被创建，这是Activity生命周期的第一个方法。通常我们程序员要在此函数中做初始化的工作，比如：**绑定布局，控件，初始化数据等**。
 
 onStart():
- 表示Activity正在被启动，这时候的Activity已经被创建好了，完全过了准备阶段，但是没有出现在前台，需要执行onResume()函数才可以进入到前台与用户进行交互。
+ 表示Activity正在被启动，这时候的Activity已经被创建好了，**完全过了准备阶段，但是没有出现在前台**，需要执行onResume()函数才可以进入到前台与用户进行交互。
 
 onResume():
- 表示Activitiy已经可见了，并且Activity处于运行状态，也就是Activity不止出现在了前台，而且还可以让用户点击，滑动等等操作与它进行交互。
+ 表示Activitiy已经可见了，并且Activity处于运行状态，**也就是Activity不止出现在了前台，而且还可以让用户点击，滑动等等操作与它进行交互。**
 
 onPause():
- 表示Activity正在暂停，大多数情况下，Activity执行完onPause()函数后会继续执行onStop()函数，造成这种函数调用的原因是当前的Activity启动了另外一个Activity或者回切到上一个Activity。还有一种情况就是onPause()函数被单独执行了，并没有附带执行onStop()方法，造成这种函数调用的原因很简单，就是当前Activity里启动了类似于对话框的东东。
+ 表示Activity**正在暂停，大多数情况下，Activity执行完onPause()函数后会继续执行onStop()函数**，造成这种函数调用的原因是**当前的Activity启动了另外一个Activity或者回切到上一个Activity。**还有一种情况就是onPause()函数被单独执行了，并没有附带执行onStop()方法，造成这种函数调用的原因很简单，就是当前Activity里启动了类似于对话框的东东。
 
 onStop():
- 表示Activity即将停止，我们程序员应该在此函数中做一些不那么耗时的轻量级回收操作。
+ **表示Activity即将停止，我们程序员应该在此函数中做一些不那么耗时的轻量级回收操作**。
 
 onRestart():
- 表示Activity正在重新启动。一般情况下，一个存在于后台不可见的Activity变为可见状态，都会去执行onRestart()函数，然后会继续执行onStart()函数，onResume()函数出现在前台并且处于运行状态。
+ 表示**Activity正在重新启动**。一般情况下，一个存在于后台不可见的Activity变为可见状态，都会去执行onRestart()函数，然后会继续执行onStart()函数，onResume()函数出现在前台并且处于运行状态。
 
 onDestory():
  表示Activity要被销毁了。这是Activity生命中的最后一个阶段，我们可以在onDestory()函数中做一些回收工作和资源释放等，比如：广播接收器的注销等。
@@ -154,9 +154,9 @@ onDestory():
 
 ![这里写图片描述](Activity简述.assets/20180912123143842.png)
 
- 从图中看出当Activity发生意外的情况的时候，这里的意外指的就是系统配置发生改变，Activity会被销毁，其onPause,OnStop,onDestory函数均会被调用，同时由于Actiivty是在异常情况下终止的，系统会调用onSaveInstanceState来保存当前Activity状态。调用onSaveInstanceState的时机总会发生在onStop之前，至于会不会调用时机发生在onPause方法之前，那就说不定了，这个没有固定的顺序可言，正常情况下一般onSaveInstanceState不会被调用。当Activity被重新创建后，系统会调用onRestoreInstanceState,并且把Actiivty销毁时onSaveInstanceState方法所保存的Bundle对象作为参数传递给onRestoreInstanceState和onCreate方法。所以我们可以通过onRestoreInstanceState和onCreate方法来判断Actiivty是否被重建了，如果被重建了，那么我们就可以取出之前保存的数据并恢复，从时序上来看，onRestoreInstanceState的调用时机发生在onStart之后。
+ 从图中看出当Activity发生意外的情况的时候，这里的意外指的就是系统配置发生改变，Activity会被销毁，其onPause,OnStop,onDestory函数均会被调用，**同时由于Actiivty是在异常情况下终止的，系统会调用onSaveInstanceState来保存当前Activity状态**。调用onSaveInstanceState的时机总会发生在onStop之前，至于会不会调用时机发生在onPause方法之前，那就说不定了，这个没有固定的顺序可言，正常情况下一般onSaveInstanceState不会被调用。**当Activity被重新创建后，系统会调用onRestoreInstanceState,并且把Actiivty销毁时onSaveInstanceState方法所保存的Bundle对象作为参数传递给onRestoreInstanceState和onCreate方法。所以我们可以通过onRestoreInstanceState和onCreate方法来判断Actiivty是否被重建了，如果被重建了，那么我们就可以取出之前保存的数据并恢复，从时序上来看，onRestoreInstanceState的调用时机发生在onStart之后。**
 
-同时，在onSaveInstanceState和onRestoreInstanceState方法中，系统自动为我们做了一定的恢复工作。当Activity在异常情况下需要重新创建时，系统会默认为我们保存当前Activity的视图结构。当Activity在异常情况下需要重新创建时，系统会默认为我们保存当前Activity的视图结构，并且在Activity重启后为我们恢复这些数据，比如：文本框中用户输入的数据,ListView滚动的位置等，这些View相关的状态系统都能够默认为我们恢复。具体针对某一个特定的View系统 能为我们恢复哪些数据，我们可以查看View的源码。和Activity一样，每个View都有onSaveInstanceState和onRestoreInstanceState这两个方法，看一下它们的具体实现，就能知道系统能够自动为每个View恢复哪些数据。
+同时，在onSaveInstanceState和onRestoreInstanceState方法中，系统自动为我们做了一定的恢复工作。**当Activity在异常情况下需要重新创建时，系统会默认为我们保存当前Activity的视图结构，并且在Activity重启后为我们恢复这些数据，比如：文本框中用户输入的数据,ListView滚动的位置等，这些View相关的状态系统都能够默认为我们恢复**。具体针对某一个特定的View系统 能为我们恢复哪些数据，我们可以查看View的源码。和Activity一样，每个View都有onSaveInstanceState和onRestoreInstanceState这两个方法，看一下它们的具体实现，就能知道系统能够自动为每个View恢复哪些数据。
 
 -  **关于保存和恢复View层次结构系统工作流程是这样的：首先Activity被意外终止时，Activity会调用
    onSaveInstanceState去保存数据，然后Activity会委托Window去保存数据，接着Window会委托它上面的顶层容器去保存数据。顶层容器肯是一个ViewGroup，一般来说是DecorView。最后顶层容器再去一一通知它的子元素来保存数据，这样整个数据保存过程就完成了。**这是一种典型的委托思想，上层委托下层、父容器委托子元素去处理一件事件；在View的绘制流程、事件分发都是采用这种思想在处理。
@@ -186,7 +186,7 @@ Activity按优先级从高到低可分为如下3种：
 | ②可见但非前台Activity-比如Activity中弹出了一个对话框，导致Activity可见，但是位于后台无法和用户进行直接交互（优先级居中）。 |
 | ③后台Activity-已经被暂停的Activity，比如执行了onStop()（优先级最低）。当系统内存不足时，系统会按照优先级由低到高去杀死Activity所在的进程，通过onSaveInstanceState存储数据，通过onRestoreInstanceState 恢复数据，如果一个进程没有四大组件作为依附，那么这个进程很快就会被杀死。 |
 
-- 根据上述的分析，系统配置发生改变后，系统会重新创建Activity,那么是否可以不重新创建Activity呢？
+- **根据上述的分析，系统配置发生改变后，系统会重新创建Activity,那么是否可以不重新创建Activity呢**？
    答案是有的，那就是在清单文件中**为相应的Activity配置configChanges属性，并添加相应值** 
 
 ![img](Activity简述.assets/3520331-31cf97227fde1b7e.PNG)

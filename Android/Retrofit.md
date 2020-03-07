@@ -119,13 +119,17 @@ public interface GitHubService{
   });
   ```
 
-![image-20200219002947244](Retrofit.assets/image-20200219002947244.png))**
+
+
+- **处理网络返回数据**
+
+<img src="Retrofit.assets/image-20200219002947244.png" alt="image-20200219002947244" style="zoom:80%;" />
 
 
 
 通过动态代理将一个个接口的注解翻译成为Http请求，在通过线程池来执行一个个的请求
 
-![image-20200219003112640](Retrofit.assets/image-20200219003112640.png))
+<img src="Retrofit.assets/image-20200219003112640.png" alt="image-20200219003112640" style="zoom:80%;" />)
 
 
 
@@ -321,7 +325,7 @@ InvocationHandler：
 - callFactory:请求网络OkHttp的工厂，用于生产OkHttpClient
 - baseUrl:网络请求的基地址，与get请求之后的相对地址拼接起来构成一个完整的网络请求的Url地址
 - convertFactories:数据转化器工厂集合；对请求网络之后返回的response进行转换成用户可以使用的java对象。所以数据转化器工厂集合的作用就是生产数据转化器的convert
-- adapterFactories：将call对象转换成其他的类型（支持RXJav等的平台），放置网络请求适配器工厂的，工厂的作用就是放置CallAdapter的
+- adapterFactories：将call对象转换成其他的类型（支持RXJava等的平台），放置网络请求适配器工厂的，工厂的作用就是放置CallAdapter的
 - callbackExecutor：用于执行回调的，在安卓中默认使用的是主线程的Executor，而Retrofit的网络请求最终都是使用的是Handler进行调配，处理子线程与主线程之间的切换
 - validateEagerly：标志位；是否需要立即解析接口中的方法
 
