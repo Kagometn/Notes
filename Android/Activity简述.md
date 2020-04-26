@@ -1145,7 +1145,7 @@ myFragment.toString("传送的string数据");
 ```
 
 
-## 七，面试题概述
+## 七，概述
 
 ##### 1，从Activity A跳转到Activity B之后，然后再点击back建之后，它们的生命周期调用流程是什么？
 
